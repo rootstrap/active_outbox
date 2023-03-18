@@ -60,7 +60,7 @@ module ActiveOutbox
         aggregate_identifier: try(:identifier) || id,
         event: @outbox_event || event_name,
         identifier: SecureRandom.uuid,
-        payload: payload(action)
+        payload: formatted_payload(action)
       )
       @outbox_event = nil
 
@@ -71,6 +71,16 @@ module ActiveOutbox
       end
 
       outbox.save!
+    end
+
+    def formatted_payload(action)
+      payload = payload(action)
+      case ActiveOutbox.configuration.adapter
+      when :postgres
+        payload
+      else
+        payload.to_json
+      end
     end
 
     def payload(action)

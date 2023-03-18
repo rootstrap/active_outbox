@@ -7,6 +7,8 @@ RSpec.describe ActiveOutbox::Outboxable do
     def self.name
       'Outbox'
     end
+
+    validates_presence_of :identifier, :payload, :aggregate, :aggregate_identifier, :event
   end
   FakeModel = Class.new(ActiveRecord::Base) do
     def self.name
@@ -36,15 +38,6 @@ RSpec.describe ActiveOutbox::Outboxable do
   describe '#save' do
     subject { fake_model_instance.save }
 
-    before do
-      allow_any_instance_of(FakeModel).to receive(:payload).and_wrap_original do |m, args|
-        m.call(*args).to_json
-      end
-      allow_any_instance_of(Outbox).to receive(:payload).and_wrap_original do |m, args|
-        m.call(*args).to_json
-      end
-    end
-
     let(:fake_model_instance) { FakeModel.new(identifier: identifier) }
     let(:identifier) { SecureRandom.uuid }
 
@@ -63,12 +56,13 @@ RSpec.describe ActiveOutbox::Outboxable do
         it 'creates the outbox record with the correct data' do
           subject
           outbox = Outbox.last
+          payload = JSON.parse(outbox.payload)
           expect(outbox.aggregate).to eq('FakeModel')
           expect(outbox.aggregate_identifier).to eq(identifier)
           expect(outbox.event).to eq('FAKE_MODEL_CREATED')
           expect(outbox.identifier).not_to be_nil
-          expect(outbox.payload['after']).to eq(FakeModel.last.to_json)
-          expect(outbox.payload['before']).to be_nil
+          expect(payload['after'].to_json).to eq(FakeModel.last.to_json)
+          expect(payload['before']).to be_nil
         end
       end
 
@@ -112,11 +106,11 @@ RSpec.describe ActiveOutbox::Outboxable do
         end
 
         it 'does not create the record' do
-          expect { subject }.to raise_error(ActiveRecord::RecordNotSaved).and not_change(FakeModel, :count)
+          expect { subject }.to raise_error(ActiveRecord::RecordNotSaved).and change(FakeModel, :count).by(0)
         end
 
         it 'does not create the outbox record' do
-          expect { subject }.to raise_error(ActiveRecord::RecordNotSaved).and not_change(Outbox, :count)
+          expect { subject }.to raise_error(ActiveRecord::RecordNotSaved).and change(Outbox, :count).by(0)
         end
       end
     end
@@ -150,7 +144,7 @@ RSpec.describe ActiveOutbox::Outboxable do
         it { is_expected.to be true }
 
         it 'updates the record' do
-          expect { subject }.to not_change(FakeModel, :count)
+          expect { subject }.to change(FakeModel, :count).by(0)
             .and change(fake_model_instance, :identifier).to(new_identifier)
         end
 
@@ -161,12 +155,13 @@ RSpec.describe ActiveOutbox::Outboxable do
         it 'creates the outbox record with the correct data' do
           subject
           outbox = Outbox.last
+          payload = JSON.parse(outbox.payload)
           expect(outbox.aggregate).to eq('FakeModel')
           expect(outbox.aggregate_identifier).to eq(new_identifier)
           expect(outbox.event).to eq('FAKE_MODEL_UPDATED')
           expect(outbox.identifier).not_to be_nil
-          expect(outbox.payload['after']).to eq(FakeModel.last.to_json)
-          expect(outbox.payload['before']).to eq(fake_model_json)
+          expect(payload['after'].to_json).to eq(FakeModel.last.to_json)
+          expect(payload['before'].to_json).to eq(fake_model_json)
         end
       end
     end
@@ -209,11 +204,11 @@ RSpec.describe ActiveOutbox::Outboxable do
         end
 
         it 'does not create the record' do
-          expect { subject }.to raise_error(ActiveRecord::RecordInvalid).and not_change(FakeModel, :count)
+          expect { subject }.to raise_error(ActiveRecord::RecordInvalid).and change(FakeModel, :count).by(0)
         end
 
         it 'does not create the outbox record' do
-          expect { subject }.to raise_error(ActiveRecord::RecordInvalid).and not_change(Outbox, :count)
+          expect { subject }.to raise_error(ActiveRecord::RecordInvalid).and change(Outbox, :count).by(0)
         end
 
         it 'adds the errors to the model' do
@@ -234,11 +229,11 @@ RSpec.describe ActiveOutbox::Outboxable do
         end
 
         it 'does not create the record' do
-          expect { subject }.to raise_error(ActiveRecord::RecordNotSaved).and not_change(FakeModel, :count)
+          expect { subject }.to raise_error(ActiveRecord::RecordNotSaved).and change(FakeModel, :count).by(0)
         end
 
         it 'does not create the outbox record' do
-          expect { subject }.to raise_error(ActiveRecord::RecordNotSaved).and not_change(Outbox, :count)
+          expect { subject }.to raise_error(ActiveRecord::RecordNotSaved).and change(Outbox, :count).by(0)
         end
       end
     end
@@ -251,11 +246,11 @@ RSpec.describe ActiveOutbox::Outboxable do
       end
 
       it 'does not create the record' do
-        expect { subject }.to raise_error(ActiveRecord::RecordInvalid).and not_change(FakeModel, :count)
+        expect { subject }.to raise_error(ActiveRecord::RecordInvalid).and change(FakeModel, :count).by(0)
       end
 
       it 'does not create the outbox record' do
-        expect { subject }.to raise_error(ActiveRecord::RecordInvalid).and not_change(Outbox, :count)
+        expect { subject }.to raise_error(ActiveRecord::RecordInvalid).and change(Outbox, :count).by(0)
       end
     end
   end
@@ -280,12 +275,13 @@ RSpec.describe ActiveOutbox::Outboxable do
         it 'creates the outbox record with the correct data' do
           subject
           outbox = Outbox.last
+          payload = JSON.parse(outbox.payload)
           expect(outbox.aggregate).to eq('FakeModel')
           expect(outbox.aggregate_identifier).to eq(identifier)
           expect(outbox.event).to eq('FAKE_MODEL_CREATED')
           expect(outbox.identifier).not_to be_nil
-          expect(outbox.payload['after']).to eq(FakeModel.last.to_json)
-          expect(outbox.payload['before']).to be_nil
+          expect(payload['after'].to_json).to eq(FakeModel.last.to_json)
+          expect(payload['before']).to be_nil
         end
       end
     end
@@ -304,7 +300,7 @@ RSpec.describe ActiveOutbox::Outboxable do
         it { is_expected.to be true }
 
         it 'updates the record' do
-          expect { subject }.to not_change(FakeModel, :count)
+          expect { subject }.to change(FakeModel, :count).by(0)
             .and change(fake_model, :identifier).to(new_identifier)
         end
 
@@ -315,12 +311,13 @@ RSpec.describe ActiveOutbox::Outboxable do
         it 'creates the outbox record with the correct data' do
           subject
           outbox = Outbox.last
+          payload = JSON.parse(outbox.payload)
           expect(outbox.aggregate).to eq('FakeModel')
           expect(outbox.aggregate_identifier).to eq(new_identifier)
           expect(outbox.event).to eq('FAKE_MODEL_UPDATED')
           expect(outbox.identifier).not_to be_nil
-          expect(outbox.payload['before']).to eq(fake_old_model)
-          expect(outbox.payload['after']).to eq(fake_model.reload.to_json)
+          expect(payload['before'].to_json).to eq(fake_old_model)
+          expect(payload['after'].to_json).to eq(fake_model.reload.to_json)
         end
       end
     end
@@ -347,12 +344,13 @@ RSpec.describe ActiveOutbox::Outboxable do
         it 'creates the outbox record with the correct data' do
           subject
           outbox = Outbox.last
+          payload = JSON.parse(outbox.payload)
           expect(outbox.aggregate).to eq('FakeModel')
           expect(outbox.aggregate_identifier).to eq(identifier)
           expect(outbox.event).to eq('FAKE_MODEL_DESTROYED')
           expect(outbox.identifier).not_to be_nil
-          expect(outbox.payload['after']).to be_nil
-          expect(outbox.payload['before']).to eq(fake_model.to_json)
+          expect(payload['after']).to be_nil
+          expect(payload['before'].to_json).to eq(fake_model.to_json)
         end
       end
     end
