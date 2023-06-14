@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     active_outbox (0.0.0)
-      rails (>= 7.0)
+      rails (~> 7.0)
 
 GEM
   remote: https://rubygems.org/
@@ -100,7 +100,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.2)
     minitest (5.18.0)
-    net-imap (0.3.4)
+    net-imap (0.3.6)
       date
       net-protocol
     net-pop (0.1.2)
@@ -109,7 +109,7 @@ GEM
       timeout
     net-smtp (0.3.3)
       net-protocol
-    nio4r (2.5.8)
+    nio4r (2.5.9)
     nokogiri (1.14.2-x86_64-darwin)
       racc (~> 1.4)
     parallel (1.22.1)
@@ -205,6 +205,7 @@ GEM
 
 PLATFORMS
   x86_64-darwin-21
+  x86_64-darwin-22
 
 DEPENDENCIES
   active_outbox!

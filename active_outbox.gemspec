@@ -5,14 +5,14 @@ Gem::Specification.new do |s|
   s.description = "A Transactional Outbox implementation for ActiveRecord"
   s.authors     = ["Guillermo Aguirre"]
   s.email       = "guillermoaguirre1@gmail.com"
-  s.files = Dir['LICENSE.txt', 'README.md', 'lib/**/*']
-  s.require_paths = ['lib']
+  s.files       = Dir['LICENSE.txt', 'README.md', 'lib/**/*', 'lib/active_outbox.rb']
+  s.executables = ['outbox']
   s.homepage    =
     "https://rubygems.org/gems/active_outbox"
-  s.license       = "MIT"
+  s.license     = "MIT"
 
   # Dependencies
-  s.add_dependency 'rails', '>= 7.0'
+  s.add_dependency 'rails', '~> 7.0'
 
   # Development dependencies
   s.add_development_dependency 'pry-rails', '~> 0.3.6'

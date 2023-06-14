@@ -1,3 +1,5 @@
+require 'rails'
+require 'rails/generators'
 require 'rails/generators/active_record'
 
 class OutboxGenerator < ActiveRecord::Generators::Base
@@ -21,5 +23,17 @@ class OutboxGenerator < ActiveRecord::Generators::Base
 
   def table_name
     "#{name}_outboxes"
+  end
+
+  def uuid_type
+    postgres? ? 'uuid' : 'string'
+  end
+
+  def json_type
+    postgres? ? 'jsonb' : 'string'
+  end
+
+  def postgres?
+    ActiveRecord::Base.connection.adapter_name.downcase == 'postgresql'
   end
 end

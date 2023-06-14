@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'rails'
+require 'active_outbox'
+
+rails g outbox ARGV[0]

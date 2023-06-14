@@ -75,8 +75,8 @@ module ActiveOutbox
 
     def formatted_payload(action)
       payload = payload(action)
-      case ActiveOutbox.configuration.adapter
-      when :postgres
+      case ActiveRecord::Base.connection.adapter_name.downcase
+      when 'postgresql'
         payload
       else
         payload.to_json
