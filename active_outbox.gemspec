@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "active_outbox"
-  s.version     = "0.0.0"
+  s.version     = "0.0.1"
   s.summary     = "ActiveOutbox"
   s.description = "A Transactional Outbox implementation for ActiveRecord"
   s.authors     = ["Guillermo Aguirre"]
