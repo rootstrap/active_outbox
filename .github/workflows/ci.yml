@@ -15,13 +15,13 @@ jobs:
             experimental: true
     env:
       BUNDLE_GEMFILE: Gemfile
-    name: "RSpec tests: Ruby ${{ matrix.ruby }}"
+    name: "RSpec tests: Ruby ${{ matrix.version }}"
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Ruby ${{ matrix.ruby }}
+      - name: Set up Ruby ${{ matrix.version }}
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-          ruby-version: ${{ matrix.ruby }}
+          ruby-version: ${{ matrix.version }}
       - name: Run tests
         run: bundle exec rspec
