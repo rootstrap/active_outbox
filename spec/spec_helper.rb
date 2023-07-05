@@ -12,11 +12,6 @@ SimpleCov.start 'rails' do
   add_filter 'lib/lokalise_rails/version'
 end
 
-if ENV['CI'] == 'true'
-  require 'codecov'
-  SimpleCov.formatter = SimpleCov::Formatter::Codecov
-end
-
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
 
 ActiveRecord::Base.establish_connection(
