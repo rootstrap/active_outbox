@@ -4,8 +4,7 @@ module ActiveOutbox
   module Outboxable
     extend ActiveSupport::Concern
 
-    included do |base|
-      base.extend(ClassMethods)
+    included do
       *namespace, klass = name.underscore.upcase.split('/')
       namespace = namespace.reverse.join('.')
 
@@ -40,22 +39,18 @@ module ActiveOutbox
       super(**options, &block)
     end
 
-    module ClassMethods
-      def parent_module_name
-        module_parent == Object ? '' : module_parent.name
-      end
-
-      def outbox_model
-        @outbox_model ||= ActiveOutbox::Base.subclasses.find do |klass|
-          klass.name.include?(parent_module_name)
-        end
-      end
-    end
-
     private
 
     def create_outbox!(action, event_name)
-      outbox = self.class.outbox_model.new(
+      unless self.class.module_parent.const_defined?('OUTBOX_MODEL')
+        *namespace, klass = self.class.name.underscore.upcase.split('/')
+        namespace = namespace.reverse.join('.')
+        outbox_model_name = ActiveOutbox.configuration.outbox_mapping[self.class.module_parent.name]
+        outbox_model = outbox_model_name&.safe_constantize || ActiveOutbox::Outbox
+        self.class.module_parent.const_set('OUTBOX_MODEL', outbox_model)
+      end
+      
+      outbox = self.class.module_parent.const_get('OUTBOX_MODEL').new(
         aggregate: self.class.name,
         aggregate_identifier: try(:identifier) || id,
         event: @outbox_event || event_name,
