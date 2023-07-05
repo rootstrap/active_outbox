@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'simplecov', '~> 0.17.1'
   s.add_development_dependency 'sqlite3', '1.4.2'
   s.add_development_dependency 'byebug', '~> 11.1.3'
+  s.add_development_dependency 'ruby-lsp', '~> 0.6.2'
 end
