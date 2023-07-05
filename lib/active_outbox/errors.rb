@@ -5,14 +5,12 @@ module ActiveOutbox
   class OutboxClassNotFoundError < OutboxConfigurationError
     def message
       <<~MESSAGE
-Missing Outbox class definition in module. Use `rails generate outbox <outbox model name>`.
-Define default class in `config/initializers/active_outbox.rb`:
+Missing Outbox class definition. Configure mapping in `config/initializers/active_outbox.rb`:
 
 Rails.application.reloader.to_prepare do
   ActiveOutbox.configure do |config|
     config.outbox_mapping = {
-      'Default' => <outbox model name>,
-      'Meetings' => 'Meetings::Outbox'
+      'default' => <outbox model name>
     }
   end
 end
