@@ -45,8 +45,11 @@ module ActiveOutbox
       unless self.class.module_parent.const_defined?('OUTBOX_MODEL')
         *namespace, klass = self.class.name.underscore.upcase.split('/')
         namespace = namespace.reverse.join('.')
-        outbox_model_name = ActiveOutbox.configuration.outbox_mapping[self.class.module_parent.name]
-        outbox_model = outbox_model_name&.safe_constantize || ActiveOutbox::Outbox
+        outbox_model_name = ActiveOutbox.configuration.outbox_mapping[self.class.module_parent.name.underscore] ||
+                              ActiveOutbox.configuration.outbox_mapping['default']
+        raise OutboxClassNotFoundError if outbox_model_name.nil?
+      
+        outbox_model = outbox_model_name.safe_constantize
         self.class.module_parent.const_set('OUTBOX_MODEL', outbox_model)
       end
       

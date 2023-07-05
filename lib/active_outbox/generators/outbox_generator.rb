@@ -5,7 +5,6 @@ require 'rails/generators/active_record'
 class OutboxGenerator < ActiveRecord::Generators::Base
   source_root File.expand_path("../templates", __FILE__)
 
-  argument :domains, type: :array, default: [], banner: "domain domain"
   class_option :root_components_path, type: :string, default: Rails.root
 
   def create_migration_files

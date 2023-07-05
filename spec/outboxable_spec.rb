@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe ActiveOutbox::Outboxable do
-  Outbox = Class.new(ActiveOutbox::Base) do
+  Outbox = Class.new(ActiveRecord::Base) do
     def self.name
       'Outbox'
     end
