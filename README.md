@@ -5,6 +5,23 @@ A Transactional Outbox implementation for ActiveRecord
 This gem aims to implement the event persistance side of the pattern, focusing only on providing a seamless way to store Outbox records whenever a change occurs on a given model.
 We do not provide an event publisher, nor a consumer as a part of this gem since the idea is to keep it as light weight as possible.
 
+## Installation
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'active_outbox'
+```
+
+And then execute:
+```bash
+bundle install
+```
+Or install it yourself as:
+```bash
+gem install active_outbox
+```
+
 ## Usage
 Create an `Outbox` table using the provided generator and corresponding model.
 ```bash
