@@ -14,6 +14,16 @@ jobs:
         include:
           - version: head
             experimental: true
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
       BUNDLE_GEMFILE: Gemfile
     name: "RSpec tests: Ruby ${{ matrix.version }}"
@@ -24,5 +34,12 @@ jobs:
         with:
           bundler-cache: true
           ruby-version: ${{ matrix.version }}
-      - name: Run tests
+      - name: Run tests on sqlite
         run: bundle exec rspec
+      - name: Run tests on postgres
+        run: bundle exec rspec
+        env:
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
+          ADAPTER: postgresql
+
