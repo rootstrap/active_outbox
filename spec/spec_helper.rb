@@ -20,8 +20,9 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
 db_config = if ENV['ADAPTER'] == 'postgresql'
               {
                 adapter: 'postgresql',
-                host: ENV['POSTGRES_HOST'] || 'localhost',
-                port: ENV['POSTGRES_PORT'] || 5432
+                username: ENV['POSTGRES_USER']
+                host: ENV['POSTGRES_HOST'],
+                port: ENV['POSTGRES_PORT']
               }
             else
               {

@@ -19,6 +19,7 @@ jobs:
         image: postgres
         env:
           POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_USER: postgres
         ports:
           - 5432:5432
         options: >-
@@ -41,6 +42,7 @@ jobs:
       - name: Run tests on postgres
         run: bundle exec rspec
         env:
+          POSTGRES_USER: postgres
           POSTGRES_HOST: 127.0.0.1
           POSTGRES_PORT: 5432
           ADAPTER: postgresql
