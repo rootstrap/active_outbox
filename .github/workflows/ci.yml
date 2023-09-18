@@ -39,7 +39,7 @@ jobs:
       - name: Run tests on postgres
         run: bundle exec rspec
         env:
-          POSTGRES_HOST: postgres
+          POSTGRES_HOST: 127.0.0.1
           POSTGRES_PORT: 5432
           ADAPTER: postgresql
 
