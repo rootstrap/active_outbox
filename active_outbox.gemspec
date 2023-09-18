@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'byebug', '~> 11.1.3'
   s.add_development_dependency 'pry-rails', '~> 0.3.9'
   s.add_development_dependency 'reek', '~> 6.1.4'
-  s.add_development_dependency 'rspec-rails', '~> 6.0.3'
+  s.add_development_dependency 'rspec', '~> 3.0'
   s.add_development_dependency 'rubocop', '~> 1.56.3'
   s.add_development_dependency 'simplecov', '~> 0.22.0'
   s.add_development_dependency 'sqlite3', '1.4.2'
