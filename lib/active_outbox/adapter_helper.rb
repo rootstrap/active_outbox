@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ActiveOutbox
   module AdapterHelper
     def self.uuid_type

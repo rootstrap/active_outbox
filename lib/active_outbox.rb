@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_outbox/configuration'
 require 'active_outbox/errors'
 require 'active_outbox/outboxable'
