@@ -13,3 +13,6 @@ Style/StringLiteralsInInterpolation:
 
 Layout/LineLength:
   Max: 120
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
