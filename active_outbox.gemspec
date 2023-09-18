@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
 
   # Development dependencies
   s.add_development_dependency 'byebug', '~> 11.1.3'
+  s.add_development_dependency 'pg', '~> 1.5.4'
   s.add_development_dependency 'pry-rails', '~> 0.3.9'
   s.add_development_dependency 'reek', '~> 6.1.4'
   s.add_development_dependency 'rspec', '~> 3.0'
