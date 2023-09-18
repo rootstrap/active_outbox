@@ -15,7 +15,7 @@ class ActiveOutboxGenerator < ActiveRecord::Generators::Base
     migration_template(
       'migration.rb',
       "#{migration_path}/outbox_create_#{table_name}.rb",
-      migration_version:
+      migration_version: migration_version
     )
   end
 

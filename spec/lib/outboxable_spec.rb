@@ -6,7 +6,7 @@ RSpec.describe ActiveOutbox::Outboxable do
   describe '#save' do
     subject { fake_model_instance.save }
 
-    let(:fake_model_instance) { FakeModel.new(identifier:) }
+    let(:fake_model_instance) { FakeModel.new(identifier: identifier) }
     let(:identifier) { SecureRandom.uuid }
 
     context 'when record is created' do
@@ -45,7 +45,7 @@ RSpec.describe ActiveOutbox::Outboxable do
               identifier: '7d8f60e3-5e7f-4c11-b18b-5cc01ceea3da'
             }
           }
-          outbox = Outbox.new(identifier: SecureRandom.uuid, event: nil, payload:, aggregate: FakeModel.name,
+          outbox = Outbox.new(identifier: SecureRandom.uuid, event: nil, payload: payload, aggregate: FakeModel.name,
                               aggregate_identifier: fake_model_instance.identifier)
           allow(Outbox).to receive(:new).and_return(outbox)
         end
@@ -108,7 +108,7 @@ RSpec.describe ActiveOutbox::Outboxable do
         fake_model_instance.save
       end
 
-      let(:fake_model_instance) { FakeModel.create(identifier:) }
+      let(:fake_model_instance) { FakeModel.create(identifier: identifier) }
       let!(:fake_model_json) { fake_model_instance.as_json }
       let(:identifier) { SecureRandom.uuid }
       let(:new_identifier) { SecureRandom.uuid }
@@ -147,7 +147,7 @@ RSpec.describe ActiveOutbox::Outboxable do
     subject { fake_model_instance.save! }
 
     let(:identifier) { SecureRandom.uuid }
-    let(:fake_model_instance) { FakeModel.new(identifier:) }
+    let(:fake_model_instance) { FakeModel.new(identifier: identifier) }
 
     context 'when record is created' do
       context 'when outbox record is created' do
@@ -171,7 +171,7 @@ RSpec.describe ActiveOutbox::Outboxable do
               identifier: '7d8f60e3-5e7f-4c11-b18b-5cc01ceea3da'
             }
           }
-          outbox = Outbox.new(identifier: SecureRandom.uuid, event: nil, payload:, aggregate: FakeModel.name,
+          outbox = Outbox.new(identifier: SecureRandom.uuid, event: nil, payload: payload, aggregate: FakeModel.name,
                               aggregate_identifier: fake_model_instance.identifier)
           allow(Outbox).to receive(:new).and_return(outbox)
         end
@@ -233,7 +233,7 @@ RSpec.describe ActiveOutbox::Outboxable do
   end
 
   describe '#create' do
-    subject { FakeModel.create(identifier:) }
+    subject { FakeModel.create(identifier: identifier) }
 
     let(:identifier) { SecureRandom.uuid }
 
@@ -269,7 +269,7 @@ RSpec.describe ActiveOutbox::Outboxable do
   describe '#update' do
     subject { fake_model.update(identifier: new_identifier) }
 
-    let!(:fake_model) { FakeModel.create(identifier:) }
+    let!(:fake_model) { FakeModel.create(identifier: identifier) }
     let!(:fake_old_model) { fake_model.as_json }
     let(:identifier) { SecureRandom.uuid }
     let(:new_identifier) { SecureRandom.uuid }
@@ -307,7 +307,7 @@ RSpec.describe ActiveOutbox::Outboxable do
   describe '#destroy' do
     subject { fake_model.destroy }
 
-    let!(:fake_model) { FakeModel.create(identifier:) }
+    let!(:fake_model) { FakeModel.create(identifier: identifier) }
     let(:identifier) { SecureRandom.uuid }
 
     context 'when record is destroyed' do
