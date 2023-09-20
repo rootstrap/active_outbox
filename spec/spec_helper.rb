@@ -2,11 +2,11 @@
 
 ENV['RAILS_ENV'] ||= 'test'
 
-require 'active_record'
 require 'active_outbox'
+require 'active_record'
 require 'byebug'
-require 'simplecov'
 require 'database_cleaner/active_record'
+require 'simplecov'
 
 SimpleCov.start 'rails' do
   add_filter 'spec/'
@@ -39,6 +39,7 @@ Outbox = Class.new(ActiveRecord::Base) do
 
   validates_presence_of :identifier, :payload, :aggregate, :aggregate_identifier, :event
 end
+
 FakeModel = Class.new(ActiveRecord::Base) do
   def self.name
     'FakeModel'

@@ -39,7 +39,7 @@ module ActiveOutbox
 
     def create_outbox!(action, event_name)
       unless self.class.module_parent.const_defined?('OUTBOX_MODEL')
-        *namespace, _ = self.class.name.underscore.upcase.split('/')
+        *namespace, _klass = self.class.name.underscore.upcase.split('/')
         namespace.reverse.join('.')
         outbox_model_name = ActiveOutbox.configuration.outbox_mapping[self.class.module_parent.name.underscore] ||
                             ActiveOutbox.configuration.outbox_mapping['default']
