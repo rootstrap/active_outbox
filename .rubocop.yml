@@ -1,18 +1,32 @@
+require:
+  - rubocop-factory_bot
+  - rubocop-rspec
+
+inherit_mode:
+  merge:
+    - Exclude
+
 AllCops:
+  NewCops: enable
   TargetRubyVersion: 2.7
-
-Metrics/BlockLength:
   Exclude:
-    - app/admin/**/*
-    - config/**/*
-    - spec/**/*
+    - lib/active_outbox/generators/templates/migration.rb
 
-Style/StringLiteralsInInterpolation:
-  Enabled: true
-  EnforcedStyle: double_quotes
+Gemspec/RequireMFA:
+  Enabled: false
 
-Layout/LineLength:
-  Max: 120
+Lint/DuplicateMethods:
+  Exclude:
+    - lib/active_outbox/configuration.rb
 
-Layout/MultilineMethodCallIndentation:
-  EnforcedStyle: indented
+Metrics/MethodLength:
+  Max: 12
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 7
+
+RSpec/NestedGroups:
+  Max: 4
+
+Style/Documentation:
+  Enabled: false

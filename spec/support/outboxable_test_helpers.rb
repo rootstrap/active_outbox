@@ -23,7 +23,7 @@ module OutboxableTestHelpers
     end
 
     match_when_negated(notify_expectation_failures: true) do |actual|
-      expect { actual.call }.to_not change(outbox_class, :count)
+      expect { actual.call }.not_to change(outbox_class, :count)
     end
 
     supports_block_expectations

@@ -20,9 +20,9 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
 db_config = if ENV['ADAPTER'] == 'postgresql'
               {
                 adapter: 'postgresql',
-                username: ENV['POSTGRES_USER'],
-                host: ENV['POSTGRES_HOST'],
-                port: ENV['POSTGRES_PORT']
+                username: ENV.fetch('POSTGRES_USER', nil),
+                host: ENV.fetch('POSTGRES_HOST', nil),
+                port: ENV.fetch('POSTGRES_PORT', nil)
               }
             else
               {
@@ -82,12 +82,12 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.before(:each) do
+  config.before do
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.start
   end
 
-  config.after(:each) do
+  config.after do
     DatabaseCleaner.clean
   end
 end
