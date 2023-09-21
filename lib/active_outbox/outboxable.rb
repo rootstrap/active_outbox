@@ -14,7 +14,7 @@ module ActiveOutbox
         const_name = "#{klass}_#{value}"
 
         unless module_parent::Events.const_defined?(const_name)
-          module_parent::Events.const_set(const_name, "#{const_name}#{namespace.blank? ? '' : '.'}#{namespace}")
+          module_parent::Events.const_set(const_name, "#{const_name}#{namespace.blank? ? "" : "."}#{namespace}")
         end
 
         event_name = module_parent::Events.const_get(const_name)
@@ -24,17 +24,13 @@ module ActiveOutbox
     end
 
     def save(**options, &block)
-      if options[:outbox_event].present?
-        @outbox_event = options[:outbox_event].underscore.upcase
-      end
+      @outbox_event = options[:outbox_event].underscore.upcase if options[:outbox_event].present?
 
       super(**options, &block)
     end
 
     def save!(**options, &block)
-      if options[:outbox_event].present?
-        @outbox_event = options[:outbox_event].underscore.upcase
-      end
+      @outbox_event = options[:outbox_event].underscore.upcase if options[:outbox_event].present?
 
       super(**options, &block)
     end
@@ -43,16 +39,16 @@ module ActiveOutbox
 
     def create_outbox!(action, event_name)
       unless self.class.module_parent.const_defined?('OUTBOX_MODEL')
-        *namespace, klass = self.class.name.underscore.upcase.split('/')
-        namespace = namespace.reverse.join('.')
+        *namespace, _klass = self.class.name.underscore.upcase.split('/')
+        namespace.reverse.join('.')
         outbox_model_name = ActiveOutbox.configuration.outbox_mapping[self.class.module_parent.name.underscore] ||
-                              ActiveOutbox.configuration.outbox_mapping['default']
+                            ActiveOutbox.configuration.outbox_mapping['default']
         raise OutboxClassNotFoundError if outbox_model_name.nil?
-      
+
         outbox_model = outbox_model_name.safe_constantize
         self.class.module_parent.const_set('OUTBOX_MODEL', outbox_model)
       end
-      
+
       outbox = self.class.module_parent.const_get('OUTBOX_MODEL').new(
         aggregate: self.class.name,
         aggregate_identifier: try(:identifier) || id,
@@ -64,7 +60,7 @@ module ActiveOutbox
 
       if outbox.invalid?
         outbox.errors.each do |error|
-          self.errors.import(error, attribute: "outbox.#{error.attribute}")
+          errors.import(error, attribute: "outbox.#{error.attribute}")
         end
       end
 
@@ -94,7 +90,8 @@ module ActiveOutbox
       when :destroy
         payload[:before] = as_json
       else
-        raise ActiveRecord::RecordNotSaved.new("Failed to create Outbox payload for #{self.class.name}: #{identifier}", self)
+        raise ActiveRecord::RecordNotSaved.new("Failed to create Outbox payload for #{self.class.name}: #{identifier}",
+                                               self)
       end
       payload
     end

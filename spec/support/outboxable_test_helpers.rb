@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OutboxableTestHelpers
   extend RSpec::Matchers::DSL
 
@@ -9,8 +11,12 @@ module OutboxableTestHelpers
 
       if @attributes
         @attributes = @attributes.call if @attributes.is_a? Proc
-        outboxes = outbox_class.last(count)
-        expect(outboxes.map(&:attributes)).to match(array_including(hash_including(@attributes)))
+        outboxes = outbox_class.last(count).map do |outbox|
+          outbox.attributes.tap do |attr|
+            attr['payload'] = JSON.parse(attr['payload']) unless ActiveOutbox::AdapterHelper.postgres?
+          end
+        end
+        expect(outboxes).to match(array_including(hash_including(@attributes)))
       end
 
       true
