@@ -7,11 +7,17 @@ module ActiveOutbox
     end
 
     def self.json_type
-      postgres? ? 'jsonb' : 'string'
+      'jsonb' if postgres?
+      'json' if mysql?
+      'string'
     end
 
     def self.postgres?
       ActiveRecord::Base.connection.adapter_name.downcase == 'postgresql'
+    end
+
+    def self.mysql?
+      ActiveRecord::Base.connection.adapter_name.downcase == 'mysql2'
     end
   end
 end
