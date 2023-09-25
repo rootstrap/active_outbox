@@ -3,12 +3,16 @@
 module ActiveOutbox
   module AdapterHelper
     def self.uuid_type
-      postgres? ? 'uuid' : 'string'
+      return 'uuid' if postgres?
+      return 'string' if mysql?
+
+      'string'
     end
 
     def self.json_type
-      'jsonb' if postgres?
-      'json' if mysql?
+      return 'jsonb' if postgres?
+      return 'json' if mysql?
+
       'string'
     end
 
