@@ -57,6 +57,15 @@ RSpec.describe ActiveOutbox::Outboxable do
     subject(:save_instance) { fake_model_instance.save }
 
     context 'when record is created' do
+      context 'when the ActiveOutbox configuration is not set' do
+        before do
+          allow(ActiveOutbox.configuration).to receive(:outbox_mapping).and_return({ 'default' => nil })
+        end
+
+        include_examples 'raises an error and does not create neither the record nor the outbox record',
+                         ActiveOutbox::OutboxClassNotFoundError
+      end
+
       context 'when outbox record is created' do
         let(:event) { 'FAKE_MODEL_CREATED' }
 
