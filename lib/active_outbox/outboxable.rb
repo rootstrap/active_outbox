@@ -14,7 +14,7 @@ module ActiveOutbox
         const_name = "#{klass}_#{value}"
 
         unless module_parent::Events.const_defined?(const_name)
-          module_parent::Events.const_set(const_name, "#{const_name}#{namespace.blank? ? "" : "."}#{namespace}")
+          module_parent::Events.const_set(const_name, "#{const_name}#{namespace.blank? ? '' : '.'}#{namespace}")
         end
 
         event_name = module_parent::Events.const_get(const_name)
@@ -24,32 +24,23 @@ module ActiveOutbox
     end
 
     def save(**options, &block)
-      @outbox_event = options[:outbox_event].underscore.upcase if options[:outbox_event].present?
-
+      assign_outbox_event(options)
       super(**options, &block)
     end
 
     def save!(**options, &block)
-      @outbox_event = options[:outbox_event].underscore.upcase if options[:outbox_event].present?
-
+      assign_outbox_event(options)
       super(**options, &block)
     end
 
     private
 
+    def assign_outbox_event(options)
+      @outbox_event = options[:outbox_event].underscore.upcase if options[:outbox_event].present?
+    end
+
     def create_outbox!(action, event_name)
-      unless self.class.module_parent.const_defined?('OUTBOX_MODEL')
-        *namespace, _klass = self.class.name.underscore.upcase.split('/')
-        namespace.reverse.join('.')
-        outbox_model_name = ActiveOutbox.configuration.outbox_mapping[self.class.module_parent.name.underscore] ||
-                            ActiveOutbox.configuration.outbox_mapping['default']
-        raise OutboxClassNotFoundError if outbox_model_name.nil?
-
-        outbox_model = outbox_model_name.safe_constantize
-        self.class.module_parent.const_set('OUTBOX_MODEL', outbox_model)
-      end
-
-      outbox = self.class.module_parent.const_get('OUTBOX_MODEL').new(
+      outbox = outbox_model.new(
         aggregate: self.class.name,
         aggregate_identifier: try(:identifier) || id,
         event: @outbox_event || event_name,
@@ -58,42 +49,59 @@ module ActiveOutbox
       )
       @outbox_event = nil
 
-      if outbox.invalid?
-        outbox.errors.each do |error|
-          errors.import(error, attribute: "outbox.#{error.attribute}")
-        end
-      end
-
+      handle_outbox_errors(outbox) if outbox.invalid?
       outbox.save!
     end
 
-    def formatted_payload(action)
-      payload = payload(action)
-      case ActiveRecord::Base.connection.adapter_name.downcase
-      when 'postgresql'
-        payload
-      else
-        payload.to_json
+    def outbox_model
+      module_parent = self.class.module_parent
+
+      unless module_parent.const_defined?('OUTBOX_MODEL')
+        outbox_model = outbox_model_name!.safe_constantize
+        module_parent.const_set('OUTBOX_MODEL', outbox_model)
+      end
+
+      module_parent.const_get('OUTBOX_MODEL')
+    end
+
+    def outbox_model_name!
+      namespace_outbox_mapping || default_outbox_mapping || raise(OutboxClassNotFoundError)
+    end
+
+    def namespace_outbox_mapping
+      namespace = self.class.name.split('/').first
+
+      ActiveOutbox.configuration.outbox_mapping[namespace&.underscore]
+    end
+
+    def default_outbox_mapping
+      ActiveOutbox.configuration.outbox_mapping['default']
+    end
+
+    def handle_outbox_errors(outbox)
+      outbox.errors.each do |error|
+        errors.import(error, attribute: "outbox.#{error.attribute}")
       end
     end
 
-    def payload(action)
-      payload = { before: nil, after: nil }
+    def formatted_payload(action)
+      payload = construct_payload(action)
+      AdapterHelper.postgres? ? payload : payload.to_json
+    end
+
+    def construct_payload(action)
       case action
       when :create
-        payload[:after] = as_json
+        { before: nil, after: as_json }
       when :update
-        # previous_changes => { 'name' => ['bob', 'robert']  }
         changes = previous_changes.transform_values(&:first)
-        payload[:before] = as_json.merge(changes)
-        payload[:after] = as_json
+        { before: as_json.merge(changes), after: as_json }
       when :destroy
-        payload[:before] = as_json
+        { before: as_json, after: nil }
       else
         raise ActiveRecord::RecordNotSaved.new("Failed to create Outbox payload for #{self.class.name}: #{identifier}",
                                                self)
       end
-      payload
     end
   end
 end

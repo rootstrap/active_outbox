@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OutboxCreate<%= table_name.camelize.singularize %> < ActiveRecord::Migration<%= migration_version %>
   def change
     create_table :<%= table_name %> do |t|
