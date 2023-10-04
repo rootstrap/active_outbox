@@ -30,13 +30,12 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_HOST: 127.0.0.1
-          MYSQL_DB: github_actions_test
+          MYSQL_DB: active_outbox_db
           MYSQL_USER: root
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_PASSWORD:
         ports:
-          - "3306:3306"
+          - 127.0.0.1:3306
     env:
       BUNDLE_GEMFILE: Gemfile
     name: "RSpec tests: Ruby ${{ matrix.version }}"
@@ -64,7 +63,7 @@ jobs:
           ADAPTER: mysql2
           MYSQL_HOST: 127.0.0.1
           MYSQL_PORT: 3306
-          MYSQL_DATABASE: github_actions_test
+          MYSQL_DATABASE: active_outbox_db
           MYSQL_USER: root
           MYSQL_PASSWORD:
 
