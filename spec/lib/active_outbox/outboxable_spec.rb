@@ -8,7 +8,295 @@ RSpec.describe ActiveOutbox::Outboxable do
 
     let(:fake_model_instance) { FakeModel.new(identifier: identifier) }
     let(:identifier) { SecureRandom.uuid }
+    let(:fake_model_instance) { FakeModel.new(identifier: identifier) }
+    let(:identifier) { SecureRandom.uuid }
 
+    context 'when record is created' do
+      context 'when outbox record is created' do
+        it { is_expected.to be true }
+
+        it 'creates the record' do
+          expect { subject }.to change(FakeModel, :count).by(1)
+        end
+
+        it 'creates the outbox record' do
+          expect { subject }.to change(Outbox, :count).by(1)
+        end
+
+        it 'creates the outbox record with the correct data' do
+          expect { subject }.to create_outbox_record(Outbox).with_attributes(lambda {
+            {
+              'event' => 'FAKE_MODEL_CREATED',
+              'aggregate' => 'FakeModel',
+              'aggregate_identifier' => identifier,
+              'payload' => {
+                'before' => nil,
+                'after' => FakeModel.last.as_json
+              }
+            }
+          })
+        end
+      end
+    context 'when record is created' do
+      context 'when outbox record is created' do
+        it { is_expected.to be true }
+
+        it 'creates the record' do
+          expect { subject }.to change(FakeModel, :count).by(1)
+        end
+
+        it 'creates the outbox record' do
+          expect { subject }.to change(Outbox, :count).by(1)
+        end
+
+        it 'creates the outbox record with the correct data' do
+          expect { subject }.to create_outbox_record(Outbox).with_attributes(lambda {
+            {
+              'event' => 'FAKE_MODEL_CREATED',
+              'aggregate' => 'FakeModel',
+              'aggregate_identifier' => identifier,
+              'payload' => {
+                'before' => nil,
+                'after' => FakeModel.last.as_json
+              }
+            }
+          })
+        end
+      end
+    context 'when record is created' do
+      context 'when outbox record is created' do
+        it { is_expected.to be true }
+
+        it 'creates the record' do
+          expect { subject }.to change(FakeModel, :count).by(1)
+        end
+
+        it 'creates the outbox record' do
+          expect { subject }.to change(Outbox, :count).by(1)
+        end
+
+        it 'creates the outbox record with the correct data' do
+          expect { subject }.to create_outbox_record(Outbox).with_attributes(lambda {
+            {
+              'event' => 'FAKE_MODEL_CREATED',
+              'aggregate' => 'FakeModel',
+              'aggregate_identifier' => identifier,
+              'payload' => {
+                'before' => nil,
+                'after' => FakeModel.last.as_json
+              }
+            }
+          })
+        end
+      end
+    context 'when record is created' do
+      context 'when outbox record is created' do
+        it { is_expected.to be true }
+
+        it 'creates the record' do
+          expect { subject }.to change(FakeModel, :count).by(1)
+        end
+
+        it 'creates the outbox record' do
+          expect { subject }.to change(Outbox, :count).by(1)
+        end
+
+        it 'creates the outbox record with the correct data' do
+          expect { subject }.to create_outbox_record(Outbox).with_attributes(lambda {
+            {
+              'event' => 'FAKE_MODEL_CREATED',
+              'aggregate' => 'FakeModel',
+              'aggregate_identifier' => identifier,
+              'payload' => {
+                'before' => nil,
+                'after' => FakeModel.last.as_json
+              }
+            }
+          })
+        end
+      end
+    context 'when record is created' do
+      context 'when outbox record is created' do
+        it { is_expected.to be true }
+
+        it 'creates the record' do
+          expect { subject }.to change(FakeModel, :count).by(1)
+        end
+
+        it 'creates the outbox record' do
+          expect { subject }.to change(Outbox, :count).by(1)
+        end
+
+        it 'creates the outbox record with the correct data' do
+          expect { subject }.to create_outbox_record(Outbox).with_attributes(lambda {
+            {
+              'event' => 'FAKE_MODEL_CREATED',
+              'aggregate' => 'FakeModel',
+              'aggregate_identifier' => identifier,
+              'payload' => {
+                'before' => nil,
+                'after' => FakeModel.last.as_json
+              }
+            }
+          })
+        end
+      end
+    context 'when record is created' do
+      context 'when outbox record is created' do
+        it { is_expected.to be true }
+
+        it 'creates the record' do
+          expect { subject }.to change(FakeModel, :count).by(1)
+        end
+
+        it 'creates the outbox record' do
+          expect { subject }.to change(Outbox, :count).by(1)
+        end
+
+        it 'creates the outbox record with the correct data' do
+          expect { subject }.to create_outbox_record(Outbox).with_attributes(lambda {
+            {
+              'event' => 'FAKE_MODEL_CREATED',
+              'aggregate' => 'FakeModel',
+              'aggregate_identifier' => identifier,
+              'payload' => {
+                'before' => nil,
+                'after' => FakeModel.last.as_json
+              }
+            }
+          })
+        end
+      end
+    context 'when record is created' do
+      context 'when outbox record is created' do
+        it { is_expected.to be true }
+
+        it 'creates the record' do
+          expect { subject }.to change(FakeModel, :count).by(1)
+        end
+
+        it 'creates the outbox record' do
+          expect { subject }.to change(Outbox, :count).by(1)
+        end
+
+        it 'creates the outbox record with the correct data' do
+          expect { subject }.to create_outbox_record(Outbox).with_attributes(lambda {
+            {
+              'event' => 'FAKE_MODEL_CREATED',
+              'aggregate' => 'FakeModel',
+              'aggregate_identifier' => identifier,
+              'payload' => {
+                'before' => nil,
+                'after' => FakeModel.last.as_json
+              }
+            }
+          })
+        end
+      end
+    context 'when record is created' do
+      context 'when outbox record is created' do
+        it { is_expected.to be true }
+
+        it 'creates the record' do
+          expect { subject }.to change(FakeModel, :count).by(1)
+        end
+
+        it 'creates the outbox record' do
+          expect { subject }.to change(Outbox, :count).by(1)
+        end
+
+        it 'creates the outbox record with the correct data' do
+          expect { subject }.to create_outbox_record(Outbox).with_attributes(lambda {
+            {
+              'event' => 'FAKE_MODEL_CREATED',
+              'aggregate' => 'FakeModel',
+              'aggregate_identifier' => identifier,
+              'payload' => {
+                'before' => nil,
+                'after' => FakeModel.last.as_json
+              }
+            }
+          })
+        end
+      end
+    context 'when record is created' do
+      context 'when outbox record is created' do
+        it { is_expected.to be true }
+
+        it 'creates the record' do
+          expect { subject }.to change(FakeModel, :count).by(1)
+        end
+
+        it 'creates the outbox record' do
+          expect { subject }.to change(Outbox, :count).by(1)
+        end
+
+        it 'creates the outbox record with the correct data' do
+          expect { subject }.to create_outbox_record(Outbox).with_attributes(lambda {
+            {
+              'event' => 'FAKE_MODEL_CREATED',
+              'aggregate' => 'FakeModel',
+              'aggregate_identifier' => identifier,
+              'payload' => {
+                'before' => nil,
+                'after' => FakeModel.last.as_json
+              }
+            }
+          })
+        end
+      end
+    context 'when record is created' do
+      context 'when outbox record is created' do
+        it { is_expected.to be true }
+
+        it 'creates the record' do
+          expect { subject }.to change(FakeModel, :count).by(1)
+        end
+
+        it 'creates the outbox record' do
+          expect { subject }.to change(Outbox, :count).by(1)
+        end
+
+        it 'creates the outbox record with the correct data' do
+          expect { subject }.to create_outbox_record(Outbox).with_attributes(lambda {
+            {
+              'event' => 'FAKE_MODEL_CREATED',
+              'aggregate' => 'FakeModel',
+              'aggregate_identifier' => identifier,
+              'payload' => {
+                'before' => nil,
+                'after' => FakeModel.last.as_json
+              }
+            }
+          })
+        end
+      end
+    context 'when record is created' do
+      context 'when outbox record is created' do
+        it { is_expected.to be true }
+
+        it 'creates the record' do
+          expect { subject }.to change(FakeModel, :count).by(1)
+        end
+
+        it 'creates the outbox record' do
+          expect { subject }.to change(Outbox, :count).by(1)
+        end
+
+        it 'creates the outbox record with the correct data' do
+          expect { subject }.to create_outbox_record(Outbox).with_attributes(lambda {
+            {
+              'event' => 'FAKE_MODEL_CREATED',
+              'aggregate' => 'FakeModel',
+              'aggregate_identifier' => identifier,
+              'payload' => {
+                'before' => nil,
+                'after' => FakeModel.last.as_json
+              }
+            }
+          })
+        end
+      end
     context 'when record is created' do
       context 'when outbox record is created' do
         it { is_expected.to be true }
@@ -139,6 +427,40 @@ RSpec.describe ActiveOutbox::Outboxable do
             }
           })
         end
+        it 'creates the outbox record' do
+          expect { subject }.to change(Outbox, :count).by(1)
+        end
+
+        it 'creates the outbox record with the correct data' do
+          expect { subject }.to create_outbox_record(Outbox).with_attributes(lambda {
+            {
+              'event' => 'FAKE_MODEL_UPDATED',
+              'aggregate' => 'FakeModel',
+              'aggregate_identifier' => new_identifier,
+              'payload' => {
+                'before' => fake_model_json,
+                'after' => FakeModel.last.as_json
+              }
+            }
+          })
+        end
+        it 'creates the outbox record' do
+          expect { subject }.to change(Outbox, :count).by(1)
+        end
+
+        it 'creates the outbox record with the correct data' do
+          expect { subject }.to create_outbox_record(Outbox).with_attributes(lambda {
+            {
+              'event' => 'FAKE_MODEL_UPDATED',
+              'aggregate' => 'FakeModel',
+              'aggregate_identifier' => new_identifier,
+              'payload' => {
+                'before' => fake_model_json,
+                'after' => FakeModel.last.as_json
+              }
+            }
+          })
+        end
       end
     end
   end
@@ -193,6 +515,72 @@ RSpec.describe ActiveOutbox::Outboxable do
             .and change { fake_model_instance.errors.messages }.from({}).to({ "outbox.event": ["can't be blank"] })
         end
       end
+
+      context 'when there is an error when creating the outbox record' do
+        before do
+          outbox = instance_double(Outbox, invalid?: false)
+          allow(Outbox).to receive(:new).and_return(outbox)
+          allow(outbox).to receive(:save!).and_raise(ActiveRecord::RecordNotSaved)
+        end
+
+        it 'raises error' do
+          expect { subject }.to raise_error(ActiveRecord::RecordNotSaved)
+        end
+
+        it 'does not create the record' do
+          expect { subject }.to raise_error(ActiveRecord::RecordNotSaved).and change(FakeModel, :count).by(0)
+        end
+
+        it 'does not create the outbox record' do
+          expect { subject }.to raise_error(ActiveRecord::RecordNotSaved).and change(Outbox, :count).by(0)
+        end
+      end
+    end
+
+
+      context 'when there is an error when creating the outbox record' do
+        before do
+          outbox = instance_double(Outbox, invalid?: false)
+          allow(Outbox).to receive(:new).and_return(outbox)
+          allow(outbox).to receive(:save!).and_raise(ActiveRecord::RecordNotSaved)
+        end
+
+        it 'raises error' do
+          expect { subject }.to raise_error(ActiveRecord::RecordNotSaved)
+        end
+
+        it 'does not create the record' do
+          expect { subject }.to raise_error(ActiveRecord::RecordNotSaved).and change(FakeModel, :count).by(0)
+        end
+
+        it 'does not create the outbox record' do
+          expect { subject }.to raise_error(ActiveRecord::RecordNotSaved).and change(Outbox, :count).by(0)
+        end
+      end
+    end
+
+
+      context 'when there is an error when creating the outbox record' do
+        before do
+          outbox = instance_double(Outbox, invalid?: false)
+          allow(Outbox).to receive(:new).and_return(outbox)
+          allow(outbox).to receive(:save!).and_raise(ActiveRecord::RecordNotSaved)
+        end
+
+        it 'raises error' do
+          expect { subject }.to raise_error(ActiveRecord::RecordNotSaved)
+        end
+
+        it 'does not create the record' do
+          expect { subject }.to raise_error(ActiveRecord::RecordNotSaved).and change(FakeModel, :count).by(0)
+        end
+
+        it 'does not create the outbox record' do
+          expect { subject }.to raise_error(ActiveRecord::RecordNotSaved).and change(Outbox, :count).by(0)
+        end
+      end
+    end
+
 
       context 'when there is an error when creating the outbox record' do
         before do
