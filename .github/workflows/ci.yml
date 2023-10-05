@@ -61,7 +61,7 @@ jobs:
         run: |
           sudo apt-get install -y  mysql-client
       - name: Start mysql service
-        run: sudo systemctl start mysql.service
+        run: sudo /etc/init.d/mysql start
       - name: Run tests on mysql
         run: bundle exec rspec
         env:
