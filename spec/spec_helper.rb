@@ -31,7 +31,7 @@ db_config = if ENV['ADAPTER'] == 'postgresql'
                 host: ENV['MYSQL_HOST'],
                 port: ENV['MYSQL_PORT'],
                 password: ENV['MYSQL_PASSWORD'],
-                database: ENV['MYSQL_DATABASE']
+                database: ENV['DATABASE_NAME']
               }
             else
               {
