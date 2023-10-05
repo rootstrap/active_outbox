@@ -58,7 +58,7 @@ jobs:
       - name: Run RuboCop
         run: bundle exec rubocop .
       - name: Start mysql service
-        run: sudo service mysql start
+        run: sudo systemctl start mysql.service
       - name: Run tests on mysql
         run: bundle exec rspec
         env:
