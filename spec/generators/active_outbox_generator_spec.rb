@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'generator_spec'
 require 'tempfile'
 
 RSpec.describe ActiveOutboxGenerator, type: :generator do
-  destination File.expand_path("../../tmp", __FILE__)
+  destination File.expand_path('../tmp', __dir__)
 
-  before do    
+  before do
     prepare_destination
     travel_to Time.local(1994)
   end
@@ -19,7 +21,7 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
   let(:migration_file_path) do
     "#{destination_root}/db/migrate/#{timestamp_of_migration}_outbox_create_#{table_name}_outboxes.rb"
   end
-  let(:timestamp_of_migration) { '19940101050000' }  
+  let(:timestamp_of_migration) { '19940101050000' }
 
   context 'without root_component_path' do
     before do
@@ -39,12 +41,13 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
     end
   end
 
-  context 'migration content' do        
-    subject {run_generator([table_name, "--root_components_path=#{destination_root}"])}
+  describe 'migration content' do
+    subject(:generate) { run_generator([table_name, "--root_components_path=#{destination_root}"]) }
+
     let(:actual_content) { File.read(migration_file_path) }
 
-    context 'non postgres migration' do
-      let(:expected_content) {
+    context 'when is not a postgres migration' do
+      let(:expected_content) do
         <<~MIGRATION
           class OutboxCreate#{table_name.camelcase}Outbox < ActiveRecord::Migration[7.0]
             def change
@@ -59,16 +62,13 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
               end
             end
           end
-      MIGRATION
-      }
+        MIGRATION
+      end
 
-      it 'creates the migration with the correct content' do 
-        subject
+      it 'creates the migration with the correct content' do
+        generate
         expect(actual_content).to include(expected_content)
       end
     end
   end
-
-
 end
-
