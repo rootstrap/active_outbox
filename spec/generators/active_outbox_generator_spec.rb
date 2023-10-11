@@ -70,5 +70,34 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
         expect(actual_content).to include(expected_content)
       end
     end
+
+    context 'when it is a postgres migration' do
+      before do
+        allow(ActiveOutbox::AdapterHelper).to receive(:postgres?).and_return(true)
+      end
+
+      let(:expected_content) do
+        <<~MIGRATION
+          class OutboxCreate#{table_name.camelcase}Outbox < ActiveRecord::Migration[7.0]
+            def change
+              create_table :#{table_name}_outboxes do |t|
+                t.uuid :identifier, null: false, index: { unique: true }
+                t.string :event, null: false
+                t.jsonb :payload
+                t.string :aggregate, null: false
+                t.uuid :aggregate_identifier, null: false, index: true
+
+                t.timestamps
+              end
+            end
+          end
+        MIGRATION
+      end
+
+      it 'creates the migration with the correct content' do
+        generate
+        expect(actual_content).to include(expected_content)
+      end
+    end
   end
 end
