@@ -15,7 +15,7 @@ SimpleCov.start 'rails' do
   add_filter 'lib/lokalise_rails/version'
 end
 
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 db_config = if ENV['ADAPTER'] == 'postgresql'
               {
