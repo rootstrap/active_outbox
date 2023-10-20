@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    active_outbox (0.0.2)
+    active_outbox (0.0.3)
       rails (~> 6.1)
 
 GEM
