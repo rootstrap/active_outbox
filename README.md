@@ -1,9 +1,22 @@
 # Active Outbox
 A Transactional Outbox implementation for ActiveRecord
 
-## Goals
-This gem aims to implement the event persistance side of the pattern, focusing only on providing a seamless way to store Outbox records whenever a change occurs on a given model.
+![transactional outbox pattern](./docs/images/transactional_outbox.png)
+
+This gem aims to implement the event persistance side of the pattern, focusing only on providing a seamless way to store Outbox records whenever a change occurs on a given model (#1 in the diagram).
 We do not provide an event publisher, nor a consumer as a part of this gem since the idea is to keep it as light weight as possible.
+
+## Motivation
+If you find yourself repeatedly defining a transaction block every time you need to persist an event, it might be a sign that something needs improvement. We believe that adopting a pattern should enhance your workflow, not hinder it. Creating, updating or destroying a record should remain a familiar and smooth process.
+
+Our primary objective is to ensure a seamless experience without imposing our own opinions or previous experiences. That's why this gem exclusively focuses on persisting records. We leave the other aspects of the pattern entirely open for your customization. You can emit these events using Sidekiq jobs, or explore more sophisticated solutions like Kafka Connect.
+
+## Why active_outbox?
+- Seamless integration with ActiveRecord
+- CRUD events out of the box
+- Ability to set custom events
+- Test helpers to easily check Outbox records are being created correctly
+- Customizable
 
 ## Installation
 
@@ -23,6 +36,7 @@ gem install active_outbox
 ```
 
 ## Usage
+### Setup
 Create an `Outbox` table using the provided generator and corresponding model.
 ```bash
 rails g active_outbox outbox
@@ -48,7 +62,17 @@ class User < ApplicationRecord
   include ActiveOutbox::Outboxable
 end
 ```
+### Base Events
+Using the User model as an example, the default event names provided are:
+- USER_CREATED
+- USER_UPDATED
+- USER_DESTROYED
 
+### Custom Events
+If you want to persist a custom event other than the provided base events, you can do so.
+```ruby
+user.save(outbox_event: 'YOUR_CUSTOM_EVENT')
+```
 ## Advanced Usage
 If more granularity is desired multiple `Outbox` classes can be configured. After creating the needed `Outbox` classes for each module you can specify multiple mappings in the initializer.
 ```ruby
