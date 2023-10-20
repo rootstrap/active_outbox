@@ -15,10 +15,6 @@ AllCops:
 Gemspec/RequireMFA:
   Enabled: false
 
-Lint/DuplicateMethods:
-  Exclude:
-    - lib/active_outbox/configuration.rb
-
 Metrics/MethodLength:
   Max: 12
 

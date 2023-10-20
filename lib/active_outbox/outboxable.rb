@@ -71,11 +71,11 @@ module ActiveOutbox
     def namespace_outbox_mapping
       namespace = self.class.name.split('/').first
 
-      ActiveOutbox.configuration.outbox_mapping[namespace&.underscore]
+      ActiveOutbox.config.outbox_mapping[namespace&.underscore]
     end
 
     def default_outbox_mapping
-      ActiveOutbox.configuration.outbox_mapping['default']
+      ActiveOutbox.config.outbox_mapping['default']
     end
 
     def handle_outbox_errors(outbox)
