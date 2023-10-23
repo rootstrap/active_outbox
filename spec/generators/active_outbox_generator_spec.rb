@@ -9,7 +9,9 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
 
   before do
     prepare_destination
-    travel_to Time.local(1994)
+    Time.use_zone('UTC') do
+      travel_to Time.zone.local(2023, 10, 20, 14, 25, 30)
+    end
   end
 
   after do
@@ -21,7 +23,7 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
   let(:migration_file_path) do
     "#{destination_root}/db/migrate/#{timestamp_of_migration}_outbox_create_#{table_name}_outboxes.rb"
   end
-  let(:timestamp_of_migration) { DateTime.now.strftime('%Y%m%d%H%M%S') }
+  let(:timestamp_of_migration) { DateTime.now.in_time_zone('UTC').strftime('%Y%m%d%H%M%S') }
 
   context 'without root_component_path' do
     before do
