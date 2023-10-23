@@ -95,7 +95,7 @@ GEM
     json (2.6.3)
     kwalify (0.7.2)
     language_server-protocol (3.17.0.3)
-    loofah (2.21.4)
+    loofah (2.21.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     mail (2.8.1)
@@ -121,8 +121,12 @@ GEM
     nokogiri (1.15.4)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
+    nokogiri (1.15.4-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.15.4-x86_64-linux)
+      racc (~> 1.4)
     parallel (1.23.0)
-    parser (3.2.2.4)
+    parser (3.2.2.3)
       ast (~> 2.4.1)
       racc
     pg (1.5.4)
@@ -169,7 +173,7 @@ GEM
       kwalify (~> 0.7.0)
       parser (~> 3.2.0)
       rainbow (>= 2.0, < 4.0)
-    regexp_parser (2.8.2)
+    regexp_parser (2.8.1)
     rexml (3.2.6)
     rspec (3.12.0)
       rspec-core (~> 3.12.0)
@@ -184,7 +188,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
     rspec-support (3.12.1)
-    rubocop (1.56.4)
+    rubocop (1.56.3)
       base64 (~> 0.1.1)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
@@ -225,7 +229,7 @@ GEM
     timeout (0.4.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    unicode-display_width (2.5.0)
+    unicode-display_width (2.4.2)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -233,6 +237,9 @@ GEM
 
 PLATFORMS
   ruby
+  x86_64-darwin-21
+  x86_64-darwin-22
+  x86_64-linux
 
 DEPENDENCIES
   active_outbox!
