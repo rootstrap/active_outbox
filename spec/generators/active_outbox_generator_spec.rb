@@ -21,7 +21,7 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
   let(:migration_file_path) do
     "#{destination_root}/db/migrate/#{timestamp_of_migration}_outbox_create_#{table_name}_outboxes.rb"
   end
-  let(:timestamp_of_migration) { DateTime.now.strftime("%Y%m%d%H%M%S") }
+  let(:timestamp_of_migration) { DateTime.now.strftime('%Y%m%d%H%M%S') }
 
   context 'without root_component_path' do
     before do
@@ -47,6 +47,10 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
     let(:actual_content) { File.read(migration_file_path) }
 
     context 'when is not a postgres migration' do
+      before do
+        allow(ActiveOutbox::AdapterHelper).to receive(:postgres?).and_return(false)
+      end
+
       let(:expected_content) do
         <<~MIGRATION
           class OutboxCreate#{table_name.camelcase}Outbox < ActiveRecord::Migration[7.0]
