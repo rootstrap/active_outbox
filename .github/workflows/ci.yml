@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         version: ['3.0', 3.1, 3.2]
         experimental: [false]
@@ -39,11 +39,6 @@ jobs:
           ruby-version: ${{ matrix.version }}
       - name: Run tests on sqlite
         run: bundle exec rspec
-      - name: Archive Log File
-        uses: actions/upload-artifact@v2
-        with:
-          name: file_activity
-          path: file_activity.log  
       - name: Run tests on postgres
         run: bundle exec rspec
         env:
