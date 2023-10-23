@@ -59,7 +59,7 @@ RSpec.describe ActiveOutbox::Outboxable do
     context 'when record is created' do
       context 'when the ActiveOutbox configuration is not set' do
         before do
-          allow(ActiveOutbox.configuration).to receive(:outbox_mapping).and_return({ 'default' => nil })
+          allow(ActiveOutbox.config).to receive(:outbox_mapping).and_return({ 'default' => nil })
         end
 
         include_examples 'raises an error and does not create neither the record nor the outbox record',
