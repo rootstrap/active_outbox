@@ -3,26 +3,8 @@
 require 'spec_helper'
 require 'generator_spec'
 require 'tempfile'
-require 'logger'
 
 RSpec.describe ActiveOutboxGenerator, type: :generator do
-
-  def log_directory_contents(logger, directory)
-    logger.info("Contents of: #{directory}")
-
-    Dir.entries(directory).each do |entry|
-      next if entry == '.' || entry == '..'
-
-      entry_path = File.join(directory, entry)
-
-      if File.directory?(entry_path)
-        logger.info("Subdirectory: #{entry}")
-      else
-        logger.info("File: #{entry}")
-      end
-    end
-  end
-
   destination File.expand_path('tmp', __dir__)
 
   before do
@@ -39,7 +21,7 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
   let(:migration_file_path) do
     "#{destination_root}/db/migrate/#{timestamp_of_migration}_outbox_create_#{table_name}_outboxes.rb"
   end
-  let(:timestamp_of_migration) { '19940101050000' }
+  let(:timestamp_of_migration) { DateTime.now.strftime("%Y%m%d%H%M%S") }
 
   context 'without root_component_path' do
     before do
@@ -48,17 +30,14 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
 
     it 'creates the expected files' do
       run_generator [table_name]
-      logger = Logger.new('file_activity.log')
-      log_directory_contents(logger, "#{destination_root}/db/migrate")
-      logger.close
-      #assert_file migration_file_path
+      assert_file migration_file_path
     end
   end
 
   context 'with root_component_path' do
     it 'creates the expected files' do
       run_generator([table_name, "--root_components_path=#{destination_root}"])
-      #assert_file migration_file_path
+      assert_file migration_file_path
     end
   end
 
@@ -88,7 +67,7 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
 
       it 'creates the migration with the correct content' do
         generate
-        #expect(actual_content).to include(expected_content)
+        expect(actual_content).to include(expected_content)
       end
     end
 
@@ -117,7 +96,7 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
 
       it 'creates the migration with the correct content' do
         generate
-        #expect(actual_content).to include(expected_content)
+        expect(actual_content).to include(expected_content)
       end
     end
   end
