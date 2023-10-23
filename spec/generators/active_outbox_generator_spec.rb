@@ -47,6 +47,7 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
     subject(:generate) { run_generator([table_name, "--root_components_path=#{destination_root}"]) }
 
     let(:actual_content) { File.read(migration_file_path) }
+    let(:active_record_dependency) { ActiveRecord::VERSION::STRING.to_f }
 
     context 'when is not a postgres migration' do
       before do
@@ -55,7 +56,7 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
 
       let(:expected_content) do
         <<~MIGRATION
-          class OutboxCreate#{table_name.camelcase}Outbox < ActiveRecord::Migration[7.0]
+          class OutboxCreate#{table_name.camelcase}Outbox < ActiveRecord::Migration[#{active_record_dependency}]
             def change
               create_table :#{table_name}_outboxes do |t|
                 t.string :identifier, null: false, index: { unique: true }
@@ -84,7 +85,7 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
 
       let(:expected_content) do
         <<~MIGRATION
-          class OutboxCreate#{table_name.camelcase}Outbox < ActiveRecord::Migration[7.0]
+          class OutboxCreate#{table_name.camelcase}Outbox < ActiveRecord::Migration[#{active_record_dependency}]
             def change
               create_table :#{table_name}_outboxes do |t|
                 t.uuid :identifier, null: false, index: { unique: true }
