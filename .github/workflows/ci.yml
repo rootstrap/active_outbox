@@ -46,4 +46,6 @@ jobs:
           POSTGRES_HOST: 127.0.0.1
           POSTGRES_PORT: 5432
           ADAPTER: postgresql
+      - name: Run RuboCop
+        run: bundle exec rubocop .
 
