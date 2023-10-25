@@ -3,7 +3,6 @@
 require 'rails'
 require 'rails/generators'
 require 'rails/generators/active_record'
-require 'pry'
 
 class ActiveOutboxGenerator < ActiveRecord::Generators::Base
   include ActiveOutbox::AdapterHelper
