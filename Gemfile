@@ -6,6 +6,7 @@ gemspec
 
 gem 'byebug', '~> 11.1.3'
 gem 'database_cleaner-active_record', '~> 2.1.0'
+gem 'generator_spec', '~> 0.9.4'
 gem 'pg', '~> 1.5.4'
 gem 'pry-rails', '~> 0.3.9'
 gem 'reek', '~> 6.1.4'
