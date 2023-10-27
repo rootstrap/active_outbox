@@ -15,3 +15,4 @@ gem 'rubocop', '~> 1.56.3', require: false
 gem 'rubocop-rspec', '~> 2.24.1', require: false
 gem 'simplecov', '~> 0.22.0'
 gem 'sqlite3', '1.4.2'
+gem 'mysql2', '~> 0.5.2'
