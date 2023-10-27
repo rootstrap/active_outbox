@@ -34,6 +34,8 @@ jobs:
         env:
           MYSQL_DATABASE: active_outbox_db
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_USER: active_outbox_user
+          MYSQL_PASSWORD: password
           MYSQL_ROOT_PASSWORD: password
         options: >-
           --health-cmd "mysqladmin ping"
@@ -73,6 +75,6 @@ jobs:
           MYSQL_DATABASE: active_outbox_db
           MYSQL_HOST: 127.0.0.1
           MYSQL_PORT: 3306
-          MYSQL_USER: root
+          MYSQL_USER: active_outbox_user
           MYSQL_PASSWORD: password
 
