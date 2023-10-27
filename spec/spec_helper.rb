@@ -27,11 +27,11 @@ db_config = if ENV['ADAPTER'] == 'postgresql'
             elsif ENV['ADAPTER'] == 'mysql2'
               {
                 adapter: 'mysql2',
-                username: ENV['MYSQL_USER'],
-                host: ENV['MYSQL_HOST'],
-                port: ENV['MYSQL_PORT'],
-                password: ENV['MYSQL_PASSWORD'],
-                database: ENV['MYSQL_DATABASE']
+                username: ENV.fetch('MYSQL_USER', nil),
+                host: ENV.fetch('MYSQL_HOST', nil),
+                port: ENV.fetch('MYSQL_PORT', nil),
+                password: ENV.fetch('MYSQL_PASSWORD', nil),
+                database: ENV.fetch('MYSQL_DATABASE', nil)
               }
             else
               {
