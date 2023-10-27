@@ -61,7 +61,7 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
               create_table :#{table_name}_outboxes do |t|
                 t.string :identifier, null: false, index: { unique: true }
                 t.string :event, null: false
-                t.string :payload
+                t.#{ActiveOutbox::AdapterHelper.json_type} :payload
                 t.string :aggregate, null: false
                 t.string :aggregate_identifier, null: false, index: true
 
