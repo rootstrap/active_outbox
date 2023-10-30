@@ -28,14 +28,14 @@ jobs:
           --health-timeout 5s
           --health-retries 5
       mysql:
-        image: mysql:5.7
+        image: mysql
         ports:
           - 3306:3306
         env:
+          MYSQL_ROOT_PASSWORD: password
           MYSQL_USER: active_outbox_user
           MYSQL_PASSWORD: password
           MYSQL_DATABASE: active_outbox_db
-          MYSQL_ROOT_PASSWORD: password
         options: >-
           --health-cmd "mysqladmin ping"
           --health-interval 10s
@@ -76,4 +76,3 @@ jobs:
           MYSQL_PORT: 3306
           MYSQL_USER: active_outbox_user
           MYSQL_PASSWORD: password
-
