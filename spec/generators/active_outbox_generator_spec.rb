@@ -49,7 +49,7 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
     let(:actual_content) { File.read(migration_file_path) }
     let(:active_record_dependency) { ActiveRecord::VERSION::STRING.to_f }
 
-    context 'when is a mysql migration' do
+    context 'when it is a mysql migration' do
       before do
         allow(ActiveOutbox::AdapterHelper).to receive_messages(postgres?: false, mysql?: true)
       end

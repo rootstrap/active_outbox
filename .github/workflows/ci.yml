@@ -30,7 +30,7 @@ jobs:
       mysql:
         image: mysql
         ports:
-          - 8888:3306
+          - 3306:3306
         env:
           MYSQL_ROOT_PASSWORD: password
           MYSQL_USER: active_outbox_user
@@ -68,6 +68,6 @@ jobs:
           ADAPTER: mysql2
           MYSQL_DATABASE: active_outbox_db
           MYSQL_HOST: 127.0.0.1
-          MYSQL_PORT: 8888
+          MYSQL_PORT: 3306
           MYSQL_USER: active_outbox_user
           MYSQL_PASSWORD: password
