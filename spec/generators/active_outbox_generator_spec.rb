@@ -49,9 +49,9 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
     let(:actual_content) { File.read(migration_file_path) }
     let(:active_record_dependency) { ActiveRecord::VERSION::STRING.to_f }
 
-    context 'when is not a postgres migration' do
+    context 'when is a mysql migration' do
       before do
-        allow(ActiveOutbox::AdapterHelper).to receive(:postgres?).and_return(false)
+        allow(ActiveOutbox::AdapterHelper).to receive_messages(postgres?: false, mysql?: true)
       end
 
       let(:expected_content) do
@@ -61,7 +61,36 @@ RSpec.describe ActiveOutboxGenerator, type: :generator do
               create_table :#{table_name}_outboxes do |t|
                 t.string :identifier, null: false, index: { unique: true }
                 t.string :event, null: false
-                t.#{ActiveOutbox::AdapterHelper.json_type} :payload
+                t.json :payload
+                t.string :aggregate, null: false
+                t.string :aggregate_identifier, null: false, index: true
+
+                t.timestamps
+              end
+            end
+          end
+        MIGRATION
+      end
+
+      it 'creates the migration with the correct content' do
+        generate
+        expect(actual_content).to include(expected_content)
+      end
+    end
+
+    context 'when it is a sqlite migration' do
+      before do
+        allow(ActiveOutbox::AdapterHelper).to receive_messages(postgres?: false, mysql?: false)
+      end
+
+      let(:expected_content) do
+        <<~MIGRATION
+          class OutboxCreate#{table_name.camelcase}Outbox < ActiveRecord::Migration[#{active_record_dependency}]
+            def change
+              create_table :#{table_name}_outboxes do |t|
+                t.string :identifier, null: false, index: { unique: true }
+                t.string :event, null: false
+                t.string :payload
                 t.string :aggregate, null: false
                 t.string :aggregate_identifier, null: false, index: true
 
