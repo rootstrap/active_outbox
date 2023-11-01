@@ -62,11 +62,6 @@ jobs:
           ADAPTER: postgresql
       - name: Run RuboCop
         run: bundle exec rubocop .
-      - name: install mysql client
-        run: |
-          sudo apt-get install -y  mysql-client
-      - name: Start mysql service
-        run: sudo /etc/init.d/mysql start
       - name: Run tests on mysql
         run: bundle exec rspec
         env:
