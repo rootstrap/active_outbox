@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails/generators/base'
 
 module ActiveOutbox
@@ -8,7 +10,7 @@ module ActiveOutbox
       desc 'Creates an initializer file at config/initializers/active_outbox.rb'
 
       def create_initializer_file
-        copy_file('initializer.rb', 'config/initializers/active_outbox.rb')
+        copy_file('initializer.rb', Rails.root.join('config', 'initializers', 'active_outbox.rb'))
       end
     end
   end
