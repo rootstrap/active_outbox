@@ -24,6 +24,15 @@ db_config = if ENV['ADAPTER'] == 'postgresql'
                 host: ENV.fetch('POSTGRES_HOST', nil),
                 port: ENV.fetch('POSTGRES_PORT', nil)
               }
+            elsif ENV['ADAPTER'] == 'mysql2'
+              {
+                adapter: 'mysql2',
+                username: ENV.fetch('MYSQL_USER', nil),
+                host: ENV.fetch('MYSQL_HOST', nil),
+                port: ENV.fetch('MYSQL_PORT', nil),
+                password: ENV.fetch('MYSQL_PASSWORD', nil),
+                database: ENV.fetch('MYSQL_DATABASE', nil)
+              }
             else
               {
                 adapter: 'sqlite3',

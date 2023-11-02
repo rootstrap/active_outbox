@@ -3,15 +3,25 @@
 module ActiveOutbox
   module AdapterHelper
     def self.uuid_type
-      postgres? ? 'uuid' : 'string'
+      return 'uuid' if postgres?
+      return 'string' if mysql?
+
+      'string'
     end
 
     def self.json_type
-      postgres? ? 'jsonb' : 'string'
+      return 'jsonb' if postgres?
+      return 'json' if mysql?
+
+      'string'
     end
 
     def self.postgres?
       ActiveRecord::Base.connection.adapter_name.downcase == 'postgresql'
+    end
+
+    def self.mysql?
+      ActiveRecord::Base.connection.adapter_name.downcase == 'mysql2'
     end
   end
 end

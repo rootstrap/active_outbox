@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    active_outbox (0.0.6)
+    active_outbox (0.0.7)
       dry-configurable (~> 1.0)
       rails (>= 6.1)
 
@@ -78,7 +78,6 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
-    date (3.3.3)
     diff-lcs (1.5.0)
     docile (1.4.0)
     dry-configurable (1.1.0)
@@ -111,9 +110,8 @@ GEM
     mini_mime (1.1.5)
     mini_portile2 (2.8.5)
     minitest (5.20.0)
+    mysql2 (0.5.5)
     net-imap (0.4.2)
-      date
-      net-protocol
     net-pop (0.1.2)
       net-protocol
     net-protocol (0.2.1)
@@ -242,6 +240,7 @@ DEPENDENCIES
   byebug (~> 11.1.3)
   database_cleaner-active_record (~> 2.1.0)
   generator_spec (~> 0.9.4)
+  mysql2 (~> 0.5.2)
   pg (~> 1.5.4)
   pry-rails (~> 0.3.9)
   reek (~> 6.1.4)
