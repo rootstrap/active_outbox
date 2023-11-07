@@ -26,6 +26,95 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
   end
   let(:timestamp_of_migration) { DateTime.now.in_time_zone('UTC').strftime('%Y%m%d%H%M%S') }
 
+  context 'with default outbox name' do
+    let(:migration_file_path) do
+      "#{destination_root}/db/migrate/#{timestamp_of_migration}_active_outbox_create_outboxes.rb"
+    end
+
+    context 'without root_component_path' do
+      before do
+        allow(Rails).to receive(:root).and_return(destination_root)
+      end
+
+      it 'creates the expected files' do
+        run_generator
+        assert_file migration_file_path
+      end
+    end
+
+    context 'with root_component_path' do
+      it 'creates the expected files' do
+        run_generator(["--component_path=#{destination_root}"])
+        assert_file migration_file_path
+      end
+    end
+
+    describe 'migration content' do
+      subject(:generate) { run_generator(["--component_path=#{destination_root}"]) }
+
+      let(:actual_content) { File.read(migration_file_path) }
+      let(:active_record_dependency) { ActiveRecord::VERSION::STRING.to_f }
+
+      context 'when is not a postgres migration' do
+        before do
+          allow(ActiveOutbox::AdapterHelper).to receive(:postgres?).and_return(false)
+        end
+
+        let(:expected_content) do
+          <<~MIGRATION
+            class ActiveOutboxCreateOutbox < ActiveRecord::Migration[#{active_record_dependency}]
+              def change
+                create_table :outboxes do |t|
+                  t.string :identifier, null: false, index: { unique: true }
+                  t.string :event, null: false
+                  t.string :payload
+                  t.string :aggregate, null: false
+                  t.string :aggregate_identifier, null: false, index: true
+
+                  t.timestamps
+                end
+              end
+            end
+          MIGRATION
+        end
+
+        it 'creates the migration with the correct content' do
+          generate
+          expect(actual_content).to include(expected_content)
+        end
+      end
+
+      context 'when it is a postgres migration' do
+        before do
+          allow(ActiveOutbox::AdapterHelper).to receive(:postgres?).and_return(true)
+        end
+
+        let(:expected_content) do
+          <<~MIGRATION
+            class ActiveOutboxCreateOutbox < ActiveRecord::Migration[#{active_record_dependency}]
+              def change
+                create_table :outboxes do |t|
+                  t.uuid :identifier, null: false, index: { unique: true }
+                  t.string :event, null: false
+                  t.jsonb :payload
+                  t.string :aggregate, null: false
+                  t.uuid :aggregate_identifier, null: false, index: true
+
+                  t.timestamps
+                end
+              end
+            end
+          MIGRATION
+        end
+
+        it 'creates the migration with the correct content' do
+          generate
+          expect(actual_content).to include(expected_content)
+        end
+      end
+    end
+  end
+
   context 'with custom outbox name' do
     let(:table_name) { 'custom_table_name' }
 
