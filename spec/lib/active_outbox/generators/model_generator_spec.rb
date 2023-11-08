@@ -30,7 +30,7 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
     let(:migration_file_path) do
       "#{destination_root}/db/migrate/#{timestamp_of_migration}_active_outbox_create_outboxes.rb"
     end
-
+    
     context 'without root_component_path' do
       before do
         allow(Rails).to receive(:root).and_return(destination_root)
@@ -62,7 +62,7 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
 
         let(:expected_content) do
           <<~MIGRATION
-            class ActiveOutboxCreateOutbox < ActiveRecord::Migration[#{active_record_dependency}]
+            class ActiveOutboxCreateOutboxes < ActiveRecord::Migration[#{active_record_dependency}]
               def change
                 create_table :outboxes do |t|
                   t.string :identifier, null: false, index: { unique: true }
@@ -91,7 +91,7 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
 
         let(:expected_content) do
           <<~MIGRATION
-            class ActiveOutboxCreateOutbox < ActiveRecord::Migration[#{active_record_dependency}]
+            class ActiveOutboxCreateOutboxes < ActiveRecord::Migration[#{active_record_dependency}]
               def change
                 create_table :outboxes do |t|
                   t.string :identifier, null: false, index: { unique: true }
@@ -120,7 +120,7 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
 
         let(:expected_content) do
           <<~MIGRATION
-            class ActiveOutboxCreateOutbox < ActiveRecord::Migration[#{active_record_dependency}]
+            class ActiveOutboxCreateOutboxes < ActiveRecord::Migration[#{active_record_dependency}]
               def change
                 create_table :outboxes do |t|
                   t.uuid :identifier, null: false, index: { unique: true }
@@ -178,7 +178,7 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
 
         let(:expected_content) do
           <<~MIGRATION
-            class ActiveOutboxCreate#{table_name.camelcase}Outbox < ActiveRecord::Migration[#{active_record_dependency}]
+            class ActiveOutboxCreate#{table_name.camelize}Outboxes < ActiveRecord::Migration[#{active_record_dependency}]
               def change
                 create_table :#{table_name}_outboxes do |t|
                   t.string :identifier, null: false, index: { unique: true }
@@ -207,7 +207,7 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
 
         let(:expected_content) do
           <<~MIGRATION
-            class ActiveOutboxCreate#{table_name.camelcase}Outbox < ActiveRecord::Migration[#{active_record_dependency}]
+            class ActiveOutboxCreate#{table_name.camelize}Outboxes < ActiveRecord::Migration[#{active_record_dependency}]
               def change
                 create_table :#{table_name}_outboxes do |t|
                   t.string :identifier, null: false, index: { unique: true }
@@ -236,7 +236,7 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
 
         let(:expected_content) do
           <<~MIGRATION
-            class ActiveOutboxCreate#{table_name.camelcase}Outbox < ActiveRecord::Migration[#{active_record_dependency}]
+            class ActiveOutboxCreate#{table_name.camelize}Outboxes < ActiveRecord::Migration[#{active_record_dependency}]
               def change
                 create_table :#{table_name}_outboxes do |t|
                   t.uuid :identifier, null: false, index: { unique: true }
