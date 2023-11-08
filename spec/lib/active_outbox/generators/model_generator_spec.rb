@@ -30,7 +30,7 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
     let(:migration_file_path) do
       "#{destination_root}/db/migrate/#{timestamp_of_migration}_active_outbox_create_outboxes.rb"
     end
-
+    
     context 'without root_component_path' do
       before do
         allow(Rails).to receive(:root).and_return(destination_root)
