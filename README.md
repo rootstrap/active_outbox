@@ -1,5 +1,5 @@
 # Active Outbox
-A Transactional Outbox implementation for ActiveRecord
+A Transactional Outbox implementation for Rails and ActiveRecord.
 
 ![transactional outbox pattern](./docs/images/transactional_outbox.png)
 
