@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ActiveOutboxCreate<%= table_name.camelize.singularize %> < ActiveRecord::Migration<%= migration_version %>
+class ActiveOutboxCreate<%= table_name.camelize %> < ActiveRecord::Migration<%= migration_version %>
   def change
     create_table :<%= table_name %> do |t|
       t.<%= ActiveOutbox::AdapterHelper.uuid_type %> :identifier, null: false, index: { unique: true }
