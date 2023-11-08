@@ -37,21 +37,13 @@ gem install active_outbox
 
 ## Usage
 ### Setup
-Create an `Outbox` table using the provided generator and corresponding model.
+Create an `Outbox` table using the provided generator and corresponding model. Any model name can be passed as an argument but if empty it will default to just `Outobx`. The generated table name will be `model_name_outboxes`.
 ```bash
-rails g active_outbox outbox
+rails g active_outbox:model <optional model_name>
 ```
 After running the migration, create an initializer under `config/initializers/active_outbox.rb` and setup the default outbox class to the new `Outbox` model you just created.
-```ruby
-# frozen_string_literal: true
-
-Rails.application.reloader.to_prepare do
-  ActiveOutbox.configure do |config|
-    config.outbox_mapping = {
-      'default' => 'Outbox'
-    }
-  end
-end
+```bash
+rails g active_outbox:install
 ```
 
 To allow models to store Outbox records on changes, you will have to include the `Outboxable` concern.
