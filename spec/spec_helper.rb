@@ -7,6 +7,7 @@ require 'active_record'
 require 'byebug'
 require 'database_cleaner/active_record'
 require 'simplecov'
+require 'super_diff/rspec'
 
 SimpleCov.start 'rails' do
   add_filter 'spec/'
