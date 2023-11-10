@@ -2,6 +2,7 @@
 
 ActiveOutbox.configure do |config|
   config.outbox_mapping.merge!(
-    'default' => 'Outbox'
+    'id' => 'Id::Outbox',
+    'uuid' => 'Uuid::Outbox'
   )
 end
