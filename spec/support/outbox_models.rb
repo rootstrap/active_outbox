@@ -74,10 +74,8 @@ def id_migrations
 end
 
 def uuid_migrations
-  ActiveRecord::Base.connection.create_table :uuid_fake_models,
-    if_not_exists: true,
-    primary_key: :identifier,
-    id: :uuid do |t|
+  ActiveRecord::Base.connection.create_table :uuid_fake_models, if_not_exists: true, id: false do |t|
+    t.send(ActiveOutbox::AdapterHelper.uuid_type, :identifier, primary_key: true)
     t.string :test_field
   end
 
