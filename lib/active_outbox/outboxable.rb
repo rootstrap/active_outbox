@@ -56,8 +56,8 @@ module ActiveOutbox
 
     def outbox_model
       module_parent = self.class.module_parent
-
-      unless module_parent.const_defined?('OUTBOX_MODEL')
+      # sets _inherit_ option to false so it doesn't lookup in ancestors for the constant
+      unless module_parent.const_defined?('OUTBOX_MODEL', false)
         outbox_model = outbox_model_name!.safe_constantize
         module_parent.const_set('OUTBOX_MODEL', outbox_model)
       end
