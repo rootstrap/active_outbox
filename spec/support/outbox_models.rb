@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Object.const_set('Uuid', Module.new)
-Object.const_set('Id', Module.new)
+
 Uuid::Outbox = Class.new(ActiveRecord::Base) do
   def self.name
     'Uuid::Outbox'
@@ -14,13 +14,9 @@ Uuid::Outbox = Class.new(ActiveRecord::Base) do
   validates_presence_of :identifier, :payload, :aggregate, :aggregate_identifier, :event
 end
 
-Id::Outbox = Class.new(ActiveRecord::Base) do
+Outbox = Class.new(ActiveRecord::Base) do
   def self.name
-    'Id::Outbox'
-  end
-
-  def self.table_name
-    'id_outboxes'
+    'Outbox'
   end
 
   validates_presence_of :identifier, :payload, :aggregate, :aggregate_identifier, :event
@@ -39,13 +35,9 @@ Uuid::FakeModel = Class.new(ActiveRecord::Base) do
   include ActiveOutbox::Outboxable
 end
 
-Id::FakeModel = Class.new(ActiveRecord::Base) do
+FakeModel = Class.new(ActiveRecord::Base) do
   def self.name
-    'Id::FakeModel'
-  end
-
-  def self.table_name
-    'id_fake_models'
+    'FakeModel'
   end
 
   validates_presence_of :test_field
@@ -58,11 +50,11 @@ def create_migrations
 end
 
 def id_migrations
-  ActiveRecord::Base.connection.create_table :id_fake_models, if_not_exists: true do |t|
+  ActiveRecord::Base.connection.create_table :fake_models, if_not_exists: true do |t|
     t.string :test_field
   end
 
-  ActiveRecord::Base.connection.create_table :id_outboxes, if_not_exists: true do |t|
+  ActiveRecord::Base.connection.create_table :outboxes, if_not_exists: true do |t|
     t.send(ActiveOutbox::AdapterHelper.uuid_type, :identifier, null: false, index: { unique: true })
     t.string :event, null: false
     t.send(ActiveOutbox::AdapterHelper.json_type, :payload)

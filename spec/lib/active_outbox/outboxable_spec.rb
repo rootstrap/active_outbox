@@ -293,8 +293,8 @@ RSpec.describe ActiveOutbox::Outboxable do
   end
 
   context 'when model has default primary_key' do
-    let(:fake_model_class) { Id::FakeModel }
-    let(:outbox_class) { Id::Outbox }
+    let(:fake_model_class) { FakeModel }
+    let(:outbox_class) { Outbox }
     let(:identifier) { 2 }
     let(:new_identifier) { 6 }
     let(:test_field) { 'test' }
