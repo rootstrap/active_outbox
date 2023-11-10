@@ -7,6 +7,7 @@ require 'active_record'
 require 'byebug'
 require 'database_cleaner/active_record'
 require 'simplecov'
+require 'super_diff/rspec'
 
 SimpleCov.start 'rails' do
   add_filter 'spec/'
@@ -17,46 +18,31 @@ end
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
-db_config = if ENV['ADAPTER'] == 'postgresql'
-              {
-                adapter: 'postgresql',
-                username: ENV.fetch('POSTGRES_USER', nil),
-                host: ENV.fetch('POSTGRES_HOST', nil),
-                port: ENV.fetch('POSTGRES_PORT', nil)
-              }
-            elsif ENV['ADAPTER'] == 'mysql2'
-              {
-                adapter: 'mysql2',
-                username: ENV.fetch('MYSQL_USER', nil),
-                host: ENV.fetch('MYSQL_HOST', nil),
-                port: ENV.fetch('MYSQL_PORT', nil),
-                password: ENV.fetch('MYSQL_PASSWORD', nil),
-                database: ENV.fetch('MYSQL_DATABASE', nil)
-              }
-            else
-              {
-                adapter: 'sqlite3',
-                database: ':memory:'
-              }
-            end
+db_config =
+  if ENV['ADAPTER'] == 'postgresql'
+    {
+      adapter: 'postgresql',
+      username: ENV.fetch('POSTGRES_USER', nil),
+      host: ENV.fetch('POSTGRES_HOST', nil),
+      port: ENV.fetch('POSTGRES_PORT', nil)
+    }
+  elsif ENV['ADAPTER'] == 'mysql2'
+    {
+      adapter: 'mysql2',
+      username: ENV.fetch('MYSQL_USER', nil),
+      host: ENV.fetch('MYSQL_HOST', nil),
+      port: ENV.fetch('MYSQL_PORT', nil),
+      password: ENV.fetch('MYSQL_PASSWORD', nil),
+      database: ENV.fetch('MYSQL_DATABASE', nil)
+    }
+  else
+    {
+      adapter: 'sqlite3',
+      database: ':memory:'
+    }
+  end
+
 ActiveRecord::Base.establish_connection(**db_config)
-
-Outbox = Class.new(ActiveRecord::Base) do
-  def self.name
-    'Outbox'
-  end
-
-  validates_presence_of :identifier, :payload, :aggregate, :aggregate_identifier, :event
-end
-
-FakeModel = Class.new(ActiveRecord::Base) do
-  def self.name
-    'FakeModel'
-  end
-
-  include ActiveOutbox::Outboxable
-  validates :identifier, presence: true
-end
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -72,19 +58,7 @@ RSpec.configure do |config|
   config.include OutboxableTestHelpers
 
   config.before(:suite) do
-    ActiveRecord::Base.connection.create_table :fake_models, if_not_exists: true do |t|
-      t.string :identifier, null: false
-    end
-
-    ActiveRecord::Base.connection.create_table :outboxes, if_not_exists: true do |t|
-      t.send(ActiveOutbox::AdapterHelper.uuid_type, :identifier, null: false, index: { unique: true })
-      t.string :event, null: false
-      t.send(ActiveOutbox::AdapterHelper.json_type, :payload)
-      t.string :aggregate, null: false
-      t.send(ActiveOutbox::AdapterHelper.uuid_type, :aggregate_identifier, null: false)
-
-      t.timestamps
-    end
+    create_migrations
   end
 
   config.before(:suite) do

@@ -16,13 +16,22 @@ Gemspec/RequireMFA:
   Enabled: false
 
 Metrics/MethodLength:
-  Max: 12
+  Max: 50
+
+Metrics/AbcSize:
+  Enabled: false
+
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: start_of_line
+
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
 
 RSpec/MultipleMemoizedHelpers:
-  Max: 7
+  Max: 10
 
 RSpec/NestedGroups:
-  Max: 4
+  Max: 7
 
 Style/Documentation:
   Enabled: false

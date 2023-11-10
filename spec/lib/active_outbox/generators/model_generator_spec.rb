@@ -26,6 +26,95 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
   end
   let(:timestamp_of_migration) { DateTime.now.in_time_zone('UTC').strftime('%Y%m%d%H%M%S') }
 
+  shared_examples 'creates the correct migrations for supported adapters' do
+    context 'when it is a mysql migration' do
+      before do
+        allow(ActiveOutbox::AdapterHelper).to receive_messages(postgres?: false, mysql?: true)
+      end
+
+      let(:expected_content) do
+        <<~MIGRATION
+          class ActiveOutboxCreate#{table_name.camelize}Outboxes < ActiveRecord::Migration[#{active_record_dependency}]
+            def change
+              create_table :#{table_name}#{table_name.blank? ? '' : '_'}outboxes do |t|
+                t.string :identifier, null: false, index: { unique: true }
+                t.string :event, null: false
+                t.json :payload
+                t.string :aggregate, null: false
+                t.#{aggregate_identifier_types[0]} :aggregate_identifier, null: false, index: true
+
+                t.timestamps
+              end
+            end
+          end
+        MIGRATION
+      end
+
+      it 'creates the migration with the correct content' do
+        generate
+        expect(actual_content).to include(expected_content)
+      end
+    end
+
+    context 'when it is a sqlite migration' do
+      before do
+        allow(ActiveOutbox::AdapterHelper).to receive_messages(postgres?: false, mysql?: false)
+      end
+
+      let(:expected_content) do
+        <<~MIGRATION
+          class ActiveOutboxCreate#{table_name.camelize}Outboxes < ActiveRecord::Migration[#{active_record_dependency}]
+            def change
+              create_table :#{table_name}#{table_name.blank? ? '' : '_'}outboxes do |t|
+                t.string :identifier, null: false, index: { unique: true }
+                t.string :event, null: false
+                t.string :payload
+                t.string :aggregate, null: false
+                t.#{aggregate_identifier_types[1]} :aggregate_identifier, null: false, index: true
+
+                t.timestamps
+              end
+            end
+          end
+        MIGRATION
+      end
+
+      it 'creates the migration with the correct content' do
+        generate
+        expect(actual_content).to include(expected_content)
+      end
+    end
+
+    context 'when it is a postgres migration' do
+      before do
+        allow(ActiveOutbox::AdapterHelper).to receive(:postgres?).and_return(true)
+      end
+
+      let(:expected_content) do
+        <<~MIGRATION
+          class ActiveOutboxCreate#{table_name.camelize}Outboxes < ActiveRecord::Migration[#{active_record_dependency}]
+            def change
+              create_table :#{table_name}#{table_name.blank? ? '' : '_'}outboxes do |t|
+                t.uuid :identifier, null: false, index: { unique: true }
+                t.string :event, null: false
+                t.jsonb :payload
+                t.string :aggregate, null: false
+                t.#{aggregate_identifier_types[2]} :aggregate_identifier, null: false, index: true
+
+                t.timestamps
+              end
+            end
+          end
+        MIGRATION
+      end
+
+      it 'creates the migration with the correct content' do
+        generate
+        expect(actual_content).to include(expected_content)
+      end
+    end
+  end
+
   context 'with default outbox name' do
     let(:migration_file_path) do
       "#{destination_root}/db/migrate/#{timestamp_of_migration}_active_outbox_create_outboxes.rb"
@@ -50,96 +139,23 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
     end
 
     describe 'migration content' do
-      subject(:generate) { run_generator(["--component_path=#{destination_root}"]) }
-
       let(:actual_content) { File.read(migration_file_path) }
       let(:active_record_dependency) { ActiveRecord::VERSION::STRING.to_f }
 
-      context 'when it is a mysql migration' do
-        before do
-          allow(ActiveOutbox::AdapterHelper).to receive_messages(postgres?: false, mysql?: true)
-        end
+      context 'with id aggregate_identifier' do
+        subject(:generate) { run_generator(["--component_path=#{destination_root}"]) }
 
-        let(:expected_content) do
-          <<~MIGRATION
-            class ActiveOutboxCreateOutboxes < ActiveRecord::Migration[#{active_record_dependency}]
-              def change
-                create_table :outboxes do |t|
-                  t.string :identifier, null: false, index: { unique: true }
-                  t.string :event, null: false
-                  t.json :payload
-                  t.string :aggregate, null: false
-                  t.string :aggregate_identifier, null: false, index: true
+        let(:aggregate_identifier_types) { %w[integer integer integer] }
 
-                  t.timestamps
-                end
-              end
-            end
-          MIGRATION
-        end
-
-        it 'creates the migration with the correct content' do
-          generate
-          expect(actual_content).to include(expected_content)
-        end
+        include_examples 'creates the correct migrations for supported adapters'
       end
 
-      context 'when it is a sqlite migration' do
-        before do
-          allow(ActiveOutbox::AdapterHelper).to receive_messages(postgres?: false, mysql?: false)
-        end
+      context 'with uuid aggregate_identifier' do
+        subject(:generate) { run_generator(["--component_path=#{destination_root}", '--uuid']) }
 
-        let(:expected_content) do
-          <<~MIGRATION
-            class ActiveOutboxCreateOutboxes < ActiveRecord::Migration[#{active_record_dependency}]
-              def change
-                create_table :outboxes do |t|
-                  t.string :identifier, null: false, index: { unique: true }
-                  t.string :event, null: false
-                  t.string :payload
-                  t.string :aggregate, null: false
-                  t.string :aggregate_identifier, null: false, index: true
+        let(:aggregate_identifier_types) { %w[string string uuid] }
 
-                  t.timestamps
-                end
-              end
-            end
-          MIGRATION
-        end
-
-        it 'creates the migration with the correct content' do
-          generate
-          expect(actual_content).to include(expected_content)
-        end
-      end
-
-      context 'when it is a postgres migration' do
-        before do
-          allow(ActiveOutbox::AdapterHelper).to receive(:postgres?).and_return(true)
-        end
-
-        let(:expected_content) do
-          <<~MIGRATION
-            class ActiveOutboxCreateOutboxes < ActiveRecord::Migration[#{active_record_dependency}]
-              def change
-                create_table :outboxes do |t|
-                  t.uuid :identifier, null: false, index: { unique: true }
-                  t.string :event, null: false
-                  t.jsonb :payload
-                  t.string :aggregate, null: false
-                  t.uuid :aggregate_identifier, null: false, index: true
-
-                  t.timestamps
-                end
-              end
-            end
-          MIGRATION
-        end
-
-        it 'creates the migration with the correct content' do
-          generate
-          expect(actual_content).to include(expected_content)
-        end
+        include_examples 'creates the correct migrations for supported adapters'
       end
     end
   end
@@ -166,96 +182,23 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
     end
 
     describe 'migration content' do
-      subject(:generate) { run_generator([table_name, "--component_path=#{destination_root}"]) }
-
       let(:actual_content) { File.read(migration_file_path) }
       let(:active_record_dependency) { ActiveRecord::VERSION::STRING.to_f }
 
-      context 'when it is a mysql migration' do
-        before do
-          allow(ActiveOutbox::AdapterHelper).to receive_messages(postgres?: false, mysql?: true)
-        end
+      context 'with id aggregate_identifier' do
+        subject(:generate) { run_generator([table_name, "--component_path=#{destination_root}"]) }
 
-        let(:expected_content) do
-          <<~MIGRATION
-            class ActiveOutboxCreate#{table_name.camelize}Outboxes < ActiveRecord::Migration[#{active_record_dependency}]
-              def change
-                create_table :#{table_name}_outboxes do |t|
-                  t.string :identifier, null: false, index: { unique: true }
-                  t.string :event, null: false
-                  t.json :payload
-                  t.string :aggregate, null: false
-                  t.string :aggregate_identifier, null: false, index: true
+        let(:aggregate_identifier_types) { %w[integer integer integer] }
 
-                  t.timestamps
-                end
-              end
-            end
-          MIGRATION
-        end
-
-        it 'creates the migration with the correct content' do
-          generate
-          expect(actual_content).to include(expected_content)
-        end
+        include_examples 'creates the correct migrations for supported adapters'
       end
 
-      context 'when it is a sqlite migration' do
-        before do
-          allow(ActiveOutbox::AdapterHelper).to receive_messages(postgres?: false, mysql?: false)
-        end
+      context 'with uuid aggregate_identifier' do
+        subject(:generate) { run_generator([table_name, "--component_path=#{destination_root}", '--uuid']) }
 
-        let(:expected_content) do
-          <<~MIGRATION
-            class ActiveOutboxCreate#{table_name.camelize}Outboxes < ActiveRecord::Migration[#{active_record_dependency}]
-              def change
-                create_table :#{table_name}_outboxes do |t|
-                  t.string :identifier, null: false, index: { unique: true }
-                  t.string :event, null: false
-                  t.string :payload
-                  t.string :aggregate, null: false
-                  t.string :aggregate_identifier, null: false, index: true
+        let(:aggregate_identifier_types) { %w[string string uuid] }
 
-                  t.timestamps
-                end
-              end
-            end
-          MIGRATION
-        end
-
-        it 'creates the migration with the correct content' do
-          generate
-          expect(actual_content).to include(expected_content)
-        end
-      end
-
-      context 'when it is a postgres migration' do
-        before do
-          allow(ActiveOutbox::AdapterHelper).to receive(:postgres?).and_return(true)
-        end
-
-        let(:expected_content) do
-          <<~MIGRATION
-            class ActiveOutboxCreate#{table_name.camelize}Outboxes < ActiveRecord::Migration[#{active_record_dependency}]
-              def change
-                create_table :#{table_name}_outboxes do |t|
-                  t.uuid :identifier, null: false, index: { unique: true }
-                  t.string :event, null: false
-                  t.jsonb :payload
-                  t.string :aggregate, null: false
-                  t.uuid :aggregate_identifier, null: false, index: true
-
-                  t.timestamps
-                end
-              end
-            end
-          MIGRATION
-        end
-
-        it 'creates the migration with the correct content' do
-          generate
-          expect(actual_content).to include(expected_content)
-        end
+        include_examples 'creates the correct migrations for supported adapters'
       end
     end
   end
