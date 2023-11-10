@@ -100,8 +100,10 @@ module ActiveOutbox
       when :destroy
         { before: as_json, after: nil }
       else
-        raise ActiveRecord::RecordNotSaved.new("Failed to create Outbox payload for #{self.class.name}: #{send(self.class.primary_key)}",
-          self)
+        raise ActiveRecord::RecordNotSaved.new(
+          "Failed to create Outbox payload for #{self.class.name}: #{send(self.class.primary_key)}",
+          self
+        )
       end
     end
   end
