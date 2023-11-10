@@ -16,10 +16,10 @@ Gemspec/RequireMFA:
   Enabled: false
 
 Metrics/MethodLength:
-  Max: 12
+  Max: 25
 
 Layout/EndAlignment:
-  EnforcedStyle: start_of_line
+  EnforcedStyleAlignWith: start_of_line
 
 Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation
