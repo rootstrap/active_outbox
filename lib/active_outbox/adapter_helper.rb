@@ -16,6 +16,12 @@ module ActiveOutbox
       'string'
     end
 
+    def self.bigint_type
+      return 'bigint' if postgres? || mysql?
+
+      'integer'
+    end
+
     def self.postgres?
       ActiveRecord::Base.connection.adapter_name.downcase == 'postgresql'
     end

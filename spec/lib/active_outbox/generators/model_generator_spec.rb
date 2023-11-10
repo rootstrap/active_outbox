@@ -145,7 +145,7 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
       context 'with id aggregate_identifier' do
         subject(:generate) { run_generator(["--component_path=#{destination_root}"]) }
 
-        let(:aggregate_identifier_types) { %w[integer integer integer] }
+        let(:aggregate_identifier_types) { %w[bigint integer bigint] }
 
         include_examples 'creates the correct migrations for supported adapters'
       end
@@ -188,7 +188,7 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
       context 'with id aggregate_identifier' do
         subject(:generate) { run_generator([table_name, "--component_path=#{destination_root}"]) }
 
-        let(:aggregate_identifier_types) { %w[integer integer integer] }
+        let(:aggregate_identifier_types) { %w[bigint integer bigint] }
 
         include_examples 'creates the correct migrations for supported adapters'
       end

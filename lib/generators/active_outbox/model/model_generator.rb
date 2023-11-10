@@ -50,7 +50,7 @@ module ActiveOutbox
       end
 
       def aggregate_identifier_type
-        options['uuid'].present? ? ActiveOutbox::AdapterHelper.uuid_type : 'integer'
+        options['uuid'].present? ? ActiveOutbox::AdapterHelper.uuid_type : ActiveOutbox::AdapterHelper.bigint_type
       end
     end
   end
