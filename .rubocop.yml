@@ -16,7 +16,10 @@ Gemspec/RequireMFA:
   Enabled: false
 
 Metrics/MethodLength:
-  Max: 25
+  Max: 50
+
+Metrics/AbcSize:
+  Enabled: false
 
 Layout/EndAlignment:
   EnforcedStyleAlignWith: start_of_line
