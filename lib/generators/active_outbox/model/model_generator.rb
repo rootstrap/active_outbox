@@ -21,6 +21,7 @@ module ActiveOutbox
 
       argument :model_name, type: :string, default: ''
       class_option :component_path, type: :string, desc: 'Indicates where to create the outbox migration'
+      class_option :uuid, type: :boolean, default: false, desc: 'Use UUID to identify aggregate records in events. Defaults to ID'
 
       def create_migration_file
         migration_path = "#{root_path}/db/migrate"
@@ -41,6 +42,10 @@ module ActiveOutbox
 
       def table_name
         model_name.blank? ? 'outboxes' : "#{model_name}_outboxes"
+      end
+
+      def aggregate_identifier_type
+        options['uuid'].present? ? ActiveOutbox::AdapterHelper.uuid_type : 'integer'
       end
     end
   end
