@@ -49,7 +49,7 @@ module ActiveOutbox
       end
 
       def table_name
-        *namespace, name = model_name.split('/')
+        *namespace, name = model_name.downcase.split('/')
         name = name.blank? ? 'outboxes' : "#{name}_outboxes"
         namespace = namespace.join('_')
         namespace.blank? ? name : "#{namespace}_#{name}"
@@ -57,7 +57,7 @@ module ActiveOutbox
 
       def path_name
         name = ''
-        *namespace = model_name.split('/')
+        *namespace = model_name.downcase.split('/')
         name = namespace.pop if model_name.include?('/') && namespace.length > 1
         name = name.blank? ? 'outbox' : "#{name}_outbox"
         namespace = namespace.join('/')
