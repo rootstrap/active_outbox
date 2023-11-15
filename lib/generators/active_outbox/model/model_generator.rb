@@ -35,10 +35,13 @@ module ActiveOutbox
           "#{migration_path}/active_outbox_create_#{table_name}.rb",
           migration_version: migration_version
         )
+
+        template('model.rb', "#{root_path}/app/models/#{path_name}.rb")
       end
 
       def root_path
-        options['component_path'] || Rails.root
+        path = options['component_path'].blank? ? '' : "/#{options['component_path']}"
+        "#{Rails.root}#{path}"
       end
 
       def migration_version
@@ -46,7 +49,19 @@ module ActiveOutbox
       end
 
       def table_name
-        model_name.blank? ? 'outboxes' : "#{model_name}_outboxes"
+        *namespace, name = model_name.split('/')
+        name = name.blank? ? 'outboxes' : "#{name}_outboxes"
+        namespace = namespace.join('_')
+        namespace.blank? ? name : "#{namespace}_#{name}"
+      end
+
+      def path_name
+        name = ''
+        *namespace = model_name.split('/')
+        name = namespace.pop if model_name.include?('/') && namespace.length > 1
+        name = name.blank? ? 'outbox' : "#{name}_outbox"
+        namespace = namespace.join('/')
+        namespace.blank? ? name : "#{namespace}/#{name}"
       end
 
       def aggregate_identifier_type
