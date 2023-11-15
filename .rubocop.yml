@@ -10,7 +10,7 @@ AllCops:
   NewCops: enable
   TargetRubyVersion: 3.0
   Exclude:
-    - lib/generators/active_outbox/templates/migration.rb
+    - lib/generators/active_outbox/templates/*
 
 Gemspec/RequireMFA:
   Enabled: false
