@@ -58,7 +58,9 @@ module ActiveOutbox
       def path_name
         name = ''
         *namespace = model_name.downcase.split('/')
-        name = namespace.pop if model_name.include?('/') && namespace.length > 1
+        if (model_name.include?('/') && model_name.last != '/' && namespace.length > 1) || !model_name.include?('/')
+          name = namespace.pop
+        end
         name = name.blank? ? 'outbox' : "#{name}_outbox"
         namespace = namespace.join('/')
         namespace.blank? ? name : "#{namespace}/#{name}"
