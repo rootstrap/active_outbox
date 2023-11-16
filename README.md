@@ -37,13 +37,16 @@ gem install active_outbox
 
 ## Usage
 ### Setup
-Create an initializer under `config/initializers/active_outbox.rb` and setup the default outbox class to the `Outbox` model you will create in the next step.
-```bash
-rails g active_outbox:install
-```
-After creating the initializer, create an `Outbox` table using the provided generator and corresponding model. Any model name can be passed as an argument but if empty it will default to just `outboxes`. The generated table name will be `model_name_outboxes`.
+Create the outbox table and model using the provided generator. Any model name can be passed as an argument but if empty it will default to `outboxes` and `Outbox` respectively.
 ```bash
 rails g active_outbox:model <optional model_name>
+
+  create  db/migrate/20231115182800_active_outbox_create_<model_name_>outboxes.rb
+  create  app/models/<model_name_>outbox.rb
+```
+After running the migration, create an initializer under `config/initializers/active_outbox.rb` and setup the default outbox class to the new `Outbox` model you just created.
+```bash
+rails g active_outbox:install
 ```
 
 To allow models to store Outbox records on changes, you will have to include the `Outboxable` concern.
@@ -71,8 +74,15 @@ By default our Outbox migration has an `aggregate_identifier` field which serves
 ```bash
 rails g active_outbox:model <optional model_name> --uuid
 ```
-### Multiple Outbox mappings
-If more granularity is desired multiple `Outbox` classes can be configured. After creating the needed `Outbox` classes for each module you can specify multiple mappings in the initializer.
+### Modularized Outbox Mappings
+If more granularity is desired multiple outbox classes can be configured. Using the provided generators we can specify namespaces and the folder structure. 
+```bash
+rails g active_outbox:model user_access/ --component-path packs/user_access
+
+  create  packs/user_access/db/migrate/20231115181205_active_outbox_create_user_access_outboxes.rb
+  create  packs/user_access/app/models/user_access/outbox.rb
+```
+After creating the needed `Outbox` classes for each module you can specify multiple mappings in the initializer.
 ```ruby
 # frozen_string_literal: true
 

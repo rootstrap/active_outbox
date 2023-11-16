@@ -26,6 +26,21 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
   end
   let(:timestamp_of_migration) { DateTime.now.in_time_zone('UTC').strftime('%Y%m%d%H%M%S') }
 
+  shared_examples 'creates the correct model file' do
+    let(:expected_content) do
+      <<~MODEL
+        class #{path_name.camelize} < ApplicationRecord
+          validates_presence_of :identifier, :payload, :aggregate, :aggregate_identifier, :event
+        end
+      MODEL
+    end
+
+    it 'create the model file with the correct content' do
+      generate
+      expect(actual_content).to include(expected_content)
+    end
+  end
+
   shared_examples 'creates the correct migrations for supported adapters' do
     context 'when it is a mysql migration' do
       before do
@@ -120,6 +135,10 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
       "#{destination_root}/db/migrate/#{timestamp_of_migration}_active_outbox_create_outboxes.rb"
     end
 
+    let(:model_file_path) do
+      "#{destination_root}/app/models/outbox.rb"
+    end
+
     context 'without root_component_path' do
       before do
         allow(Rails).to receive(:root).and_return(destination_root)
@@ -128,6 +147,7 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
       it 'creates the expected files' do
         run_generator
         assert_file migration_file_path
+        assert_file model_file_path
       end
     end
 
@@ -135,7 +155,17 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
       it 'creates the expected files' do
         run_generator(["--component_path=#{destination_root}"])
         assert_file migration_file_path
+        assert_file model_file_path
       end
+    end
+
+    describe 'model content' do
+      subject(:generate) { run_generator(["--component_path=#{destination_root}"]) }
+
+      let(:actual_content) { File.read(model_file_path) }
+      let(:path_name) { 'outbox' }
+
+      include_examples 'creates the correct model file'
     end
 
     describe 'migration content' do
@@ -162,6 +192,10 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
 
   context 'with custom outbox name' do
     let(:table_name) { 'custom_table_name' }
+    let(:path_name) { "#{table_name}_outbox" }
+    let(:model_file_path) do
+      "#{destination_root}/app/models/#{path_name}.rb"
+    end
 
     context 'without root_component_path' do
       before do
@@ -171,6 +205,7 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
       it 'creates the expected files' do
         run_generator [table_name]
         assert_file migration_file_path
+        assert_file model_file_path
       end
     end
 
@@ -178,7 +213,16 @@ RSpec.describe ActiveOutbox::Generators::ModelGenerator, type: :generator do
       it 'creates the expected files' do
         run_generator([table_name, "--component_path=#{destination_root}"])
         assert_file migration_file_path
+        assert_file model_file_path
       end
+    end
+
+    describe 'model content' do
+      subject(:generate) { run_generator([table_name, "--component_path=#{destination_root}"]) }
+
+      let(:actual_content) { File.read(model_file_path) }
+
+      include_examples 'creates the correct model file'
     end
 
     describe 'migration content' do
