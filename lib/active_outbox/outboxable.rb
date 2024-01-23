@@ -10,7 +10,7 @@ module ActiveOutbox
       *namespace, klass = name.underscore.upcase.split('/')
       namespace = namespace.reverse.join('.')
 
-      module_parent.const_set('Events', Module.new) unless module_parent.const_defined?('Events')
+      module_parent.const_set('Events', Module.new) unless module_parent.const_defined?('Events', false)
 
       { create: 'CREATED', update: 'UPDATED', destroy: 'DESTROYED' }.each do |key, value|
         const_name = "#{klass}_#{value}"
