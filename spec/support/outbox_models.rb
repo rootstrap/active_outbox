@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Object.const_set('Uuid', Module.new)
+Object.const_set('Events', Module.new)
 
 Uuid::Outbox = Class.new(ActiveRecord::Base) do
   def self.name
