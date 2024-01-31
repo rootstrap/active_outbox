@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 Object.const_set('Uuid', Module.new)
-Object.const_set('Events', Module.new)
 
 Uuid::Outbox = Class.new(ActiveRecord::Base) do
   def self.name
@@ -23,6 +22,15 @@ Outbox = Class.new(ActiveRecord::Base) do
   validates_presence_of :identifier, :payload, :aggregate, :aggregate_identifier, :event
 end
 
+FakeModel = Class.new(ActiveRecord::Base) do
+  def self.name
+    'FakeModel'
+  end
+
+  validates_presence_of :test_field
+  include ActiveOutbox::Outboxable
+end
+
 Uuid::FakeModel = Class.new(ActiveRecord::Base) do
   def self.name
     'Uuid::FakeModel'
@@ -30,15 +38,6 @@ Uuid::FakeModel = Class.new(ActiveRecord::Base) do
 
   def self.table_name
     'uuid_fake_models'
-  end
-
-  validates_presence_of :test_field
-  include ActiveOutbox::Outboxable
-end
-
-FakeModel = Class.new(ActiveRecord::Base) do
-  def self.name
-    'FakeModel'
   end
 
   validates_presence_of :test_field
