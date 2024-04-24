@@ -33,5 +33,13 @@ RSpec/MultipleMemoizedHelpers:
 RSpec/NestedGroups:
   Max: 7
 
+RSpec/FilePath:
+  Exclude:
+    - spec/lib/active_outbox/outboxable/*
+
+RSpec/SpecFilePathFormat:
+  Exclude:
+    - spec/lib/active_outbox/outboxable/*
+
 Style/Documentation:
   Enabled: false
