@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    active_outbox (0.1.4)
+    active_outbox (0.2.0)
       dry-configurable (~> 1.0)
       rails (>= 6.1)
 
