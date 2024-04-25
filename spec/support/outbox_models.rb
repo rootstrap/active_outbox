@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
+# NOTICE:
+# Class definition ordering matters in this file. Do not change unless deemed necessary
+
 Object.const_set('Uuid', Module.new)
+
+Outbox = Class.new(ActiveRecord::Base) do
+  def self.name
+    'Outbox'
+  end
+
+  validates_presence_of :identifier, :payload, :aggregate, :aggregate_identifier, :event
+end
 
 Uuid::Outbox = Class.new(ActiveRecord::Base) do
   def self.name
@@ -14,12 +25,13 @@ Uuid::Outbox = Class.new(ActiveRecord::Base) do
   validates_presence_of :identifier, :payload, :aggregate, :aggregate_identifier, :event
 end
 
-Outbox = Class.new(ActiveRecord::Base) do
+FakeModel = Class.new(ActiveRecord::Base) do
   def self.name
-    'Outbox'
+    'FakeModel'
   end
 
-  validates_presence_of :identifier, :payload, :aggregate, :aggregate_identifier, :event
+  validates_presence_of :test_field
+  include ActiveOutbox::Outboxable
 end
 
 Uuid::FakeModel = Class.new(ActiveRecord::Base) do
@@ -29,15 +41,6 @@ Uuid::FakeModel = Class.new(ActiveRecord::Base) do
 
   def self.table_name
     'uuid_fake_models'
-  end
-
-  validates_presence_of :test_field
-  include ActiveOutbox::Outboxable
-end
-
-FakeModel = Class.new(ActiveRecord::Base) do
-  def self.name
-    'FakeModel'
   end
 
   validates_presence_of :test_field

@@ -10,16 +10,21 @@ module ActiveOutbox
       *namespace, klass = name.underscore.upcase.split('/')
       namespace = namespace.reverse.join('.')
 
-      module_parent.const_set('Events', Module.new) unless module_parent.const_defined?('Events')
+      module_parent.const_set('ActiveOutbox', Module.new) unless module_parent.const_defined?('ActiveOutbox', false)
+
+      unless module_parent::ActiveOutbox.const_defined?('Events', false)
+        module_parent::ActiveOutbox.const_set('Events', Module.new)
+      end
 
       { create: 'CREATED', update: 'UPDATED', destroy: 'DESTROYED' }.each do |key, value|
         const_name = "#{klass}_#{value}"
 
-        unless module_parent::Events.const_defined?(const_name)
-          module_parent::Events.const_set(const_name, "#{const_name}#{namespace.blank? ? '' : '.'}#{namespace}")
+        unless module_parent::ActiveOutbox::Events.const_defined?(const_name)
+          module_parent::ActiveOutbox::Events.const_set(const_name,
+            "#{const_name}#{namespace.blank? ? '' : '.'}#{namespace}")
         end
 
-        event_name = module_parent::Events.const_get(const_name)
+        event_name = module_parent::ActiveOutbox::Events.const_get(const_name)
 
         send("after_#{key}") { create_outbox!(key, event_name) }
       end
