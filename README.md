@@ -63,6 +63,8 @@ Using the User model as an example, the default event names provided are:
 - USER_UPDATED
 - USER_DESTROYED
 
+This will live under `ActiveOutbox::Events` wherever you include the `Outboxable` concern. The intent is to define it under `Object` for non-namespaced models, as well as under each model namespace that is encountered.
+
 ### Custom Events
 If you want to persist a custom event other than the provided base events, you can do so.
 ```ruby
@@ -75,7 +77,7 @@ By default our Outbox migration has an `aggregate_identifier` field which serves
 rails g active_outbox:model <optional model_name> --uuid
 ```
 ### Modularized Outbox Mappings
-If more granularity is desired multiple outbox classes can be configured. Using the provided generators we can specify namespaces and the folder structure. 
+If more granularity is desired multiple outbox classes can be configured. Using the provided generators we can specify namespaces and the folder structure.
 ```bash
 rails g active_outbox:model user_access/ --component-path packs/user_access
 
