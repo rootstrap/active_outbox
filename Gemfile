@@ -15,5 +15,5 @@ gem 'rspec', '~> 3.12.0'
 gem 'rubocop', '~> 1.56.3', require: false
 gem 'rubocop-rspec', '~> 2.24.1', require: false
 gem 'simplecov', '~> 0.22.0'
-gem 'sqlite3', '1.5.0'
+gem 'sqlite3', '1.5.1'
 gem 'super_diff', '~> 0.10.0'
