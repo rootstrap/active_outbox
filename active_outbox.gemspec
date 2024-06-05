@@ -5,11 +5,11 @@ Gem::Specification.new do |spec|
   spec.files                 = Dir['LICENSE.txt', 'README.md', 'lib/**/*', 'lib/active_outbox.rb']
   spec.name                  = 'active_outbox'
   spec.summary               = 'A Transactional Outbox implementation for ActiveRecord'
-  spec.version               = '0.2.1'
+  spec.version               = '0.2.2'
 
   spec.email                 = 'guillermoaguirre1@gmail.com'
   spec.executables           = ['outbox']
-  spec.homepage              = 'https://rubygems.org/gems/active_outbox'
+  spec.homepage              = 'https://github.com/rootstrap/active_outbox'
   spec.license               = 'MIT'
   spec.required_ruby_version = '>= 3.0'
 
